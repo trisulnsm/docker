@@ -28,7 +28,13 @@ mkdir /opt/trisul6_root
 Give this instance a name trisul1a, 1b etc.. for managing them 
 
 ````
-sudo docker run --name=trisul1a --net=host -v /home/vivek/localtrisroot:/trisulroot -p 3000:4000 -p 3003:4003  -d trisul-full
+
+# start trisul and capture from enp5s0 
+sudo docker run --name=trisul1a --net=host -v /opt/trisul6_root:/trisulroot -d trisul-full enp5s0 
+
+# or if you want to login and configure trisul yourselves
+sudo docker run --name=trisul1a --net=host -v /opt/trisul6_root:/trisulroot -d trisul-full
+
 
 ````
 

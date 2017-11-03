@@ -48,5 +48,14 @@ echo start Probe domain
 echo Starting Webtrisul
 /usr/local/share/webtrisul/build/webtrisuld start 
 
+# if interface supplied use it and start 
+if [[ ( "$#" -eq 1) ]]; then
+	echo "Automatically setting interface to supplied command line $1" 
+	/usr/local/bin/trisulctl_probe set config default interface=$1 
+
+	echo "Automatically starting default context "
+	/usr/local/bin/trisulctl_probe start context default 
+fi
+
 echo Sleeping
 sleep infinity 
