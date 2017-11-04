@@ -27,18 +27,28 @@ mkdir /opt/trisul6_root
 
 Give this instance a name trisul1a, 1b etc.. for managing them 
 
+#### 2.1 start trisul and capture from enp5s0 
+
+````
+sudo docker run --name=trisul1a --net=host -v /opt/trisul6_root:/trisulroot -d trisul-full --interface enp5s0 
 ````
 
-# start trisul and capture from enp5s0 
-sudo docker run --name=trisul1a --net=host -v /opt/trisul6_root:/trisulroot -d trisul-full enp5s0 
 
-# or if you want to login and configure trisul yourselves
+#### 2.2 start instace of trisul, you need to login and configure 
+
+````
 sudo docker run --name=trisul1a --net=host -v /opt/trisul6_root:/trisulroot -d trisul-full
-
-
 ````
 
-Can check using
+#### 2.3 start instance of trisul capture from enp5s0 change webserver ports 
+
+````
+sudo docker run --name=trisul1a --net=host -v /opt/trisul6_root:/trisulroot -d trisul-full \
+  --interface enp5s0 --webserver-port 4000 --websockets-port 4003 
+````
+
+You can login to the docker using the usual -it switch 
+
 
 ````
 sudo docker exec -it trisul1a /bin/bash
