@@ -5,7 +5,7 @@ FROM ubuntu:16.04
 LABEL 	org.trisul.project="trisul" \
         maintainer="github.com/trisulnsm" \
 		project="Trisul Network Analytics Full" \
-		description="Docker image Trisul Probe, Hub, and Web in single container" \
+		description="Trisul Probe, Hub, and Web in a single container" \
 		version="6" 
 
 
@@ -21,11 +21,18 @@ RUN apt-get update  &&  apt-get install -y  \
 		ethtool \
 		libpcap0.8 \
 		binutils  \
+		nano  \
+		suricata  \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Packages
 COPY *.deb /root/
 RUN dpkg -i /root/trisul-probe_6.0.*-xenial_amd64.deb /root/trisul-hub_6.0.*-xenial_amd64.deb       /root/trisul-badfellas_6.0.*-xenial_amd64.deb  /root/trisul-geo_6.0.*-xenial_amd64.deb	   /root/trisul-urlfilter_6.0.*-xenial_amd64.deb /root/webtrisul_6.0.*-xenial_amd64.deb 
+
+# Overlays config for SURICATA 
+COPY oink.cron /root/
+COPY oinkmaster.conf /root/
+COPY suricata-debian.yaml /root/
 
 RUN echo 'PS1="DOCKER:\h:\W \u$ "' > /root/.bashrc 
 

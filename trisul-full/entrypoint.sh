@@ -37,7 +37,7 @@ fi
 # Fix the webserver port 
 if [ ! -z "$WEBSERVER_PORT" ]; then
 echo NGINX Web server port changed to : $WEBSERVER_PORT
-sed -i -E "s/listen.*;/listen $WEBSERVER_PORT/" /usr/local/share/webtrisul/build/nginx.conf
+sed -i -E "s/listen.*;/listen $WEBSERVER_PORT;/" /usr/local/share/webtrisul/build/nginx.conf
 fi
 
 if [ ! -z "$WEBSOCKETS_PORT" ]; then
@@ -76,7 +76,7 @@ ln -sf /trisulroot/var /usr/local/var
 fi  
 
 
-echo Mapping persistent directories DATA CONFIG 
+echo Mapping persistent directories DATA CONFIG  for TrisulNSM 
 if test -e /trisulroot/etc; then 
 mv /usr/local/etc /usr/local/etc_docker
 ln -sf /trisulroot/etc /usr/local/etc
@@ -90,6 +90,46 @@ chown trisul.trisul /trisulroot/var/lib/trisul* -R
 chown trisul.trisul /trisulroot/etc/trisul* -R 
 chown trisul.trisul /trisulroot/var/log/trisul* -R 
 chown trisul.trisul /trisulroot/var/run/trisul -R 
+
+
+echo Mapping persistent directories for Suricata and Oinkmaster 
+if test -e /trisulroot/suricata; then 
+	mv /etc/suricata/ /etc/suricata_docker
+	ln -sf /trisulroot/suricata/etc /etc/suricata
+
+	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_docker
+	ln -sf /trisulroot/oinkmaster.conf /etc/oinkmaster.conf 
+else
+    mkdir -p /trisulroot/suricata/etc 
+
+	echo Replaing custom YAML - we disable Suricata internal events 
+	cp /root/suricata_debian.yaml /etc/suricata/suricata_debian.yaml
+
+	echo ET Rules packaged ,, oink will update
+	tar xf /root/emerging.rules.tar.gz -C /etc/suricata 
+
+	echo Replaing OINKMASTER with custom ET Updates 
+	cp /root/oinkmaster.conf  /etc/oinkmaster.conf 
+
+	echo Copy  over initial config to persistent area
+	cp -r /etc/suricata/*  /trisulroot/suricata/etc
+	mv /etc/suricata /etc/suricata_docker 
+	ln -sf /trisulroot/suricata/etc /etc/suricata
+
+	cp -r /etc/oinkmaster.conf /trisulroot/suricata/oinkmaster.conf 
+	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_docker
+	ln -sf /trisulroot/oinkmaster.conf /etc/oinkmaster.conf 
+fi  
+
+echo Adding OINK to CRONTAB
+crontab /root/oink.cron 
+
+chown trisul.trisul /trisulroot/var/lib/trisul* -R 
+chown trisul.trisul /trisulroot/etc/trisul* -R 
+chown trisul.trisul /trisulroot/var/log/trisul* -R 
+chown trisul.trisul /trisulroot/var/run/trisul -R 
+
+
 
 echo Starting Hub domain
 /usr/local/bin/trisulctl_hub start domain
@@ -112,6 +152,9 @@ if [ ! -z "$START_INTERFACE" ]; then
 	echo "Automatically starting default context "
 	/usr/local/bin/trisulctl_probe start context default 
 fi
+
+echo Starting Suricata  on $START_INTERFACE
+/usr/bin/suricata --user trisul -l /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
 
 echo Sleeping
 sleep infinity 
