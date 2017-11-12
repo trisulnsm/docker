@@ -29,10 +29,13 @@ RUN apt-get update  &&  apt-get install -y  \
 COPY *.deb /root/
 RUN dpkg -i /root/trisul-probe_6.0.*-xenial_amd64.deb /root/trisul-hub_6.0.*-xenial_amd64.deb       /root/trisul-badfellas_6.0.*-xenial_amd64.deb  /root/trisul-geo_6.0.*-xenial_amd64.deb	   /root/trisul-urlfilter_6.0.*-xenial_amd64.deb /root/webtrisul_6.0.*-xenial_amd64.deb 
 
-# Overlays config for SURICATA 
-COPY oink.cron /root/
-COPY oinkmaster.conf /root/
-COPY suricata-debian.yaml /root/
+# This layer overlays SURICATA config items 
+COPY oink.cron \
+     oinkmaster.conf \
+	 suricata-debian.yaml \
+	 suricata_eve_unixsocket.lua \
+	 emerging.rules.tar.gz \
+	 /root/ 
 
 RUN echo 'PS1="DOCKER:\h:\W \u$ "' > /root/.bashrc 
 

@@ -1,7 +1,7 @@
 Docker : trisul-full
 ===========
 
-A full blown Network Security and Traffic Monitoring solution based on Trisul Network Analytics in a dead simple Docker. 
+A full blown Network Security and Traffic Monitoring (NSM) solution based on Trisul Network Analytics in a dead simple Docker. 
 
 - Full traffic monitoring - 100s of metrics from every angle
 - Alert on traffic, flows, malware activity
@@ -9,11 +9,10 @@ A full blown Network Security and Traffic Monitoring solution based on Trisul Ne
 - Extract URLs, Certs, Files, .. with API to script your own
 - Sophisticated PCAP storage with best retrieval times
 - Also includes Suricata + ET community rules with auto refresh 
-- BEST of all - all parts are included and optimized. No messing around with Splunk or ELK or SIEMS. 
+- **BEST of all**  - all parts are included and optimized. No messing around with Splunk or ELK or SIEMS. 
 
 
-
-Building.
+Building your own from packages
 ---------
 
 1. Download all DEBS into this directory. The DEBs need to be obtained from trisul.org Download page
@@ -22,7 +21,6 @@ Building.
 ````docker
 sudo docker build -t trisul-full .
 ````
-
 
 Running.
 ---------
@@ -64,7 +62,7 @@ sudo docker run --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6
 The same command but with a name `trisul1a` to work with the docker instance 
 
 ````
-sudo docker run -l trisul1a --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 \
+sudo docker run --name  trisul1a --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 \
   --interface enp5s0 --webserver-port 4000 --websockets-port 4003 
 ````
 

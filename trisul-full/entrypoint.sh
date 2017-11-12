@@ -24,26 +24,28 @@ while true; do
 done
 
 if [ ! -z "$START_INTERFACE" ]; then
-echo  INTF Start interface set $START_INTERFACE
-echo  INTF Using ETHTOOL to disable gso gro tso on $START_INTERFACE
-ethtool -K $START_INTERFACE  tso off gso off gro off
+	echo  INTF Start interface set $START_INTERFACE
+	echo  INTF Using ETHTOOL to disable gso gro tso on $START_INTERFACE
+	ethtool -K $START_INTERFACE  tso off gso off gro off
 fi
 
 if [ ! -z "$CAPTURE_FILE" ]; then
-echo "PCAP Capture file set to  $CAPTURE_FILE"
+	echo "PCAP Capture file set to  $CAPTURE_FILE"
 fi
 
 
 # Fix the webserver port 
 if [ ! -z "$WEBSERVER_PORT" ]; then
-echo NGINX Web server port changed to : $WEBSERVER_PORT
-sed -i -E "s/listen.*;/listen $WEBSERVER_PORT;/" /usr/local/share/webtrisul/build/nginx.conf
+	echo NGINX Web server port changed to : $WEBSERVER_PORT
+	sed -i -E "s/listen.*;/listen $WEBSERVER_PORT;/" /usr/local/share/webtrisul/build/nginx.conf
+	/usr/local/bin/shell  /usr/local/var/lib/trisul-config/domain0/webtrisul/WEBTRISULDB.SQDB 'update webtrisul_options set value="4000" where name = "webtrisul_port";'
 fi
 
 if [ ! -z "$WEBSOCKETS_PORT" ]; then
-echo THIN Web sockets changed to $WEBSOCKETS_PORT
-sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/build/thin-nginxd
-sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/build/thin-nginxssld
+	echo THIN Web sockets changed to $WEBSOCKETS_PORT
+	sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/build/thin-nginxd
+	sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/build/thin-nginxssld
+	sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/config/initializers/oem_settings.rb 
 fi
 
 echo Stopping Webtrisul
@@ -67,23 +69,23 @@ rm -f /usr/local/var/lib/trisul-hub/domain0/run/trisul_cp_router.pid
 
 echo Mapping persistent directories DATA 
 if test -e /trisulroot/var; then 
-mv /usr/local/var /usr/local/var_docker
-ln -sf /trisulroot/var /usr/local/var
+	mv /usr/local/var /usr/local/var_docker
+	ln -sf /trisulroot/var /usr/local/var
 else
-cp -r /usr/local/var /trisulroot/var
-mv /usr/local/var /usr/local/var_docker
-ln -sf /trisulroot/var /usr/local/var
+	cp -r /usr/local/var /trisulroot/var
+	mv /usr/local/var /usr/local/var_docker
+	ln -sf /trisulroot/var /usr/local/var
 fi  
 
 
 echo Mapping persistent directories DATA CONFIG  for TrisulNSM 
 if test -e /trisulroot/etc; then 
-mv /usr/local/etc /usr/local/etc_docker
-ln -sf /trisulroot/etc /usr/local/etc
+	mv /usr/local/etc /usr/local/etc_docker
+	ln -sf /trisulroot/etc /usr/local/etc
 else
-cp -r /usr/local/etc /trisulroot/etc
-mv /usr/local/etc /usr/local/etc_docker
-ln -sf /trisulroot/etc /usr/local/etc
+	cp -r /usr/local/etc /trisulroot/etc
+	mv /usr/local/etc /usr/local/etc_docker
+	ln -sf /trisulroot/etc /usr/local/etc
 fi  
 
 chown trisul.trisul /trisulroot/var/lib/trisul* -R 
@@ -102,19 +104,23 @@ if test -e /trisulroot/suricata; then
 else
     mkdir -p /trisulroot/suricata/etc 
 
-	echo Replaing custom YAML - we disable Suricata internal events 
-	cp /root/suricata_debian.yaml /etc/suricata/suricata_debian.yaml
-
 	echo ET Rules packaged ,, oink will update
 	tar xf /root/emerging.rules.tar.gz -C /etc/suricata 
 
 	echo Replaing OINKMASTER with custom ET Updates 
 	cp /root/oinkmaster.conf  /etc/oinkmaster.conf 
 
+	echo Replaing custom YAML - we disable Suricata internal events 
+	cp -f /root/suricata-debian.yaml /etc/suricata/suricata-debian.yaml
+
 	echo Copy  over initial config to persistent area
 	cp -r /etc/suricata/*  /trisulroot/suricata/etc
 	mv /etc/suricata /etc/suricata_docker 
 	ln -sf /trisulroot/suricata/etc /etc/suricata
+
+
+	echo Adding suricata_eve_unixsocket.lua APP to probe 
+	cp /root/suricata_eve_unixsocket.lua /usr/local/var/lib/trisul-probe/domain0/probe0/context0/config/local-lua/ 
 
 	cp -r /etc/oinkmaster.conf /trisulroot/suricata/oinkmaster.conf 
 	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_docker
