@@ -3,16 +3,15 @@ Trisul Network Analytics : Network Security Monitoring in a Docker
 
 A full blown Network Security and Traffic Monitoring (NSM) solution you can deploy in 1 minute.
 
-
-
 - Full traffic monitoring - 100s of metrics from every angle
 - Alert on traffic, flows, malware activity
 - Complete flow monitoring, we capture and record every single flow with blazing fast retrieval
 - Extract URLs, Certs, Files, .. with API to script your own
 - Sophisticated PCAP storage with best retrieval times
+- Includes our latest  **Streaming graph analytics** not available on any other openly available platform 
 - Also includes Suricata + ET community rules with auto refresh 
 - **BEST of all**  - all parts are included and optimized. No messing around with Splunk or ELK or SIEMS. 
-- Completely FREE to run to monitor a rolling window of the most recent 3 days.
+- Completely FREE to monitor a rolling window of the most recent 3 days. See [Trisul Licensing](https://www.trisul.org/free/)  for more options. 
 
 
 Cast
@@ -30,7 +29,7 @@ Cast
 Running.
 ---------
 
-### 1. Install the free Docker if you already havent done so
+### 1. Install the free Docker if you havent already done so
 
 Please see instructions for installing [Docker CE on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04) You can find official instructions for installing Docker on a number of platforms on the official (Install Docker site](https://docs.docker.com/engine/installation/)
 
@@ -51,7 +50,10 @@ Now you are ready to run TrisulNSM.  Say you want to capture traffic from the po
 sudo docker run  --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 --interface enp5s0 
 ````
 
-Thats ! Logon on `https://localhost:3000` and you can dive right in..
+In the above command, notice that you mapped the volume using `-v` of the host directory `/opt/trisul6_root` you created in step 1.  That is where all the persistent data is kept. 
+
+
+**Thats it !**  Logon on `https://localhost:3000` and you can dive right in. See [Trisul Docs : Basic Usage](https://www.trisul.org/docs/ug/basicusage/index.html) to get started. 
 
 
 ---------------------
