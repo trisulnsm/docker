@@ -3,15 +3,18 @@ Trisul Network Analytics : Network Security Monitoring in a Docker
 
 A full blown Network Security and Traffic Monitoring (NSM) solution you can deploy in 1 minute.
 
+[Docker Hub trisulnsm/trisul6](https://hub.docker.com/r/trisulnsm/trisul6/) 
+
+
 - Full traffic monitoring - 100s of metrics from every angle
 - Alert on traffic, flows, malware activity
-- Complete flow monitoring, we capture and record every single flow with blazing fast retrieval
+- Complete flow monitoring, record every flow with blazing fast retrieval
 - Extract URLs, Certs, Files, .. with API to script your own
 - Sophisticated PCAP storage with best retrieval times
-- Includes our latest  **Streaming graph analytics** not available on any other openly available platform 
+- Includes a limited version of Trisul Edge, **streaming graph analytics** 
 - Also includes Suricata + ET community rules with auto refresh 
 - **BEST of all**  - all parts are included and optimized. No messing around with Splunk or ELK or SIEMS. 
-- Completely FREE to monitor a rolling window of the most recent 3 days. See [Trisul Licensing](https://www.trisul.org/free/)  for more options. 
+- FREE to monitor a rolling window of the most recent 3 days. See [Trisul Licensing](https://www.trisul.org/free/)  for more options. 
 
 
 Cast
@@ -31,7 +34,7 @@ Running.
 
 ### 1. Install the free Docker if you havent already done so
 
-Please see instructions for installing [Docker CE on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04) You can find official instructions for installing Docker on a number of platforms on the official (Install Docker site](https://docs.docker.com/engine/installation/)
+Please see instructions for installing [Docker CE on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04) You can find official instructions for installing Docker on a number of platforms on the official [Install Docker site](https://docs.docker.com/engine/installation/)
 
 
 ### 2. Create data directory on host 
