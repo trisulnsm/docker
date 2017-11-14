@@ -35,6 +35,7 @@ COPY oink.cron \
 	 suricata-debian.yaml \
 	 suricata_eve_unixsocket.lua \
 	 emerging.rules.tar.gz \
+	 trisul_suricata.sh \
 	 /root/ 
 
 RUN echo 'PS1="DOCKER:\h:\W \u$ "' > /root/.bashrc 
@@ -46,6 +47,5 @@ CMD [""]
 
 
 VOLUME /trisulroot
-EXPOSE 3000
-EXPOSE 3003
+EXPOSE 3000  3003
 

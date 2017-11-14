@@ -9,12 +9,14 @@ START_INTERFACE=
 WEBSERVER_PORT=
 WEBSOCKETS_PORT=
 CAPTURE_FILE=
+NO_SURICATA=
 while true; do
   case "$1" in
 	-i | --interface )  START_INTERFACE="$2"; shift 2 ;;
-	-f | --pcap )       CAPTURE_FILE="$2"; shift 2 ;;
+	-f | --pcap )       CAPTURE_FILE="/trisulroot/$2"; shift 2 ;;
     --webserver-port )  WEBSERVER_PORT="$2"; shift 2 ;;
     --websockets-port ) WEBSOCKETS_PORT="$2"; shift 2 ;;
+	--no-ids )          NO_SURICATA="1"; shift 1;; 
     -- ) shift; break ;;
 	* ) if [ ! -z "$1" ]; then 
 			echo "Unknown option [$1]"; 
@@ -31,6 +33,14 @@ fi
 
 if [ ! -z "$CAPTURE_FILE" ]; then
 	echo "PCAP Capture file set to  $CAPTURE_FILE"
+
+	if [ ! -e  $CAPTURE_FILE ]; then 
+		echo "Cannot find PCAP file $CAPTURE_FILE. You need to put in on the root directory"
+	fi 
+fi
+
+if [ ! -z "$NO_SURICATA" ]; then
+	echo "NOIDS --no-ids : We wont be running IDS over this PCAP file $CAPTURE_FILE"
 fi
 
 
@@ -119,13 +129,14 @@ else
 	ln -sf /trisulroot/suricata/etc /etc/suricata
 
 
-	echo Adding suricata_eve_unixsocket.lua APP to probe 
-	cp /root/suricata_eve_unixsocket.lua /usr/local/var/lib/trisul-probe/domain0/probe0/context0/config/local-lua/ 
 
 	cp -r /etc/oinkmaster.conf /trisulroot/suricata/oinkmaster.conf 
 	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_docker
 	ln -sf /trisulroot/oinkmaster.conf /etc/oinkmaster.conf 
 fi  
+
+echo Adding suricata_eve_unixsocket.lua APP to probe 
+cp /root/suricata_eve_unixsocket.lua /usr/local/lib/trisul-probe/plugins/lua/ 
 
 echo Adding OINK to CRONTAB
 crontab /root/oink.cron 
@@ -159,8 +170,23 @@ if [ ! -z "$START_INTERFACE" ]; then
 	/usr/local/bin/trisulctl_probe start context default 
 fi
 
-echo Starting Suricata  on $START_INTERFACE
-/usr/bin/suricata --user trisul -l /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
+if [ ! -z "$START_INTERFACE" ]; then
+	echo Starting Suricata  on line  $START_INTERFACE
+	/usr/bin/suricata --user trisul -l /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
+fi 
+
+
+
+if [ ! -z "$CAPTURE_FILE" ]; then
+	if [ ! -z "$NO_SURICATA" ]; then
+		echo "Importing from capture file $CAPTURE_FILE into new context. No IDS  "
+		/root/trisul_suricata.sh  $CAPTURE_FILE no_ids 
+	else
+		echo "Importing from capture file $CAPTURE_FILE into new context. Will also index with Suricata "
+		/root/trisul_suricata.sh  $CAPTURE_FILE suricata 
+	fi
+fi 
+
 
 echo Sleeping
 sleep infinity 

@@ -103,6 +103,14 @@ You can login to the docker using the usual -it switch
 sudo docker exec -it <tag> /bin/bash
 ````
 
+Options
+========
+
+1. `--interface <value>`  :  which interface do you want to start a live capture on ?
+2. `--pcap <file>` : run the instance over this pcap file. You need to place the pcap file inside the host volume. For example `/opt/trisul6_root` in the sample commands shown above. 
+3.  `--no-ids` : Do not run a second IDS analysis pass over the PCAP file. This option must be used only with the `--pcap` option
+4. `--webserver-port <port-number>` : Run the container webserver instance on this port. Default is 3000 
+5. `--websockets-port <port-number>` : Use this port for websockets. This is needed for the real time features of Trisul. 
 
 
 Developers
