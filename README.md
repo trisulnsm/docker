@@ -59,6 +59,18 @@ In the above command, notice that you mapped the volume using `-v` of the host d
 **Thats it !**  Logon on `https://localhost:3000` and you can dive right in. See [Trisul Docs : Basic Usage](https://www.trisul.org/docs/ug/basicusage/index.html) to get started. 
 
 
+### 4. Run a two-pass Trisul + Suricata  over a PCAP dump 
+
+Trisul has a multi layered analytics capability. A first pass analysis with Trisul is done over a PCAP dump, then a second layer is created and another pass with Suricata IDS.  This gives you full visibility with multiple tools.
+
+````
+sudo docker run  --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 --pcap myPacketDump.pcap
+
+````
+
+Note that the file `myPacketDump.pcap` has to be placed inside the `/opt/trisul6_root` volume so that the Docker image can see the outside file.
+
+
 ---------------------
 
 Additional tasks
