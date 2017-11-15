@@ -6,7 +6,7 @@
 # Prepare context name
 
 pcount=0
-TOTAL_STEPS=5
+TOTAL_STEPS=7
 show_progress_text(){
   pcount=$((pcount+1))
   echo -e "  $pcount/$TOTAL_STEPS $1"
@@ -44,6 +44,10 @@ wc_count=$((wc_count+1))
 context_name=$file_name$wc_count
 
 config_file="/usr/local/etc/trisul-probe/domain0/probe0/context_$context_name/trisulProbeConfig.xml"
+
+show_progress_text "Stopping webtrisul to conserve memory" 
+/usr/local/share/webtrisul/build/webtrisuld stop
+
 
 show_progress_text "Creating new context $context_name"
 
@@ -90,6 +94,9 @@ if  [ "$USE_IDS" == "suricata" ]; then
 	/usr/local/bin/trisulctl_probe start context $context_name@probe0  tool=pipeeof 
 
 fi 
+
+show_progress_text "Restarting Webtrisul " 
+/usr/local/share/webtrisul/build/webtrisuld start 
 
 echo " Done"
 
