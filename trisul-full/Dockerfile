@@ -22,6 +22,7 @@ RUN apt-get update  &&  apt-get install -y  \
 		libpcap0.8 \
 		binutils  \
 		nano  \
+		librsvg2-bin \
 		suricata  \
 	&& rm -rf /var/lib/apt/lists/*
 

@@ -61,6 +61,9 @@ fi
 echo Stopping Webtrisul
 /usr/local/share/webtrisul/build/webtrisuld stop
 
+echo Removing the linkdev.db so incoming Image can  do migration of old DB on startup
+rm -f /usr/local/share/webtrisul/db/linkdev.db 
+
 echo Stopping Hub domain
 /usr/local/bin/trisulctl_hub stop context all   
 /usr/local/bin/trisulctl_hub stop domain
@@ -150,10 +153,14 @@ chown trisul.trisul /trisulroot/var/run/trisul -R
 
 echo Starting Hub domain
 /usr/local/bin/trisulctl_hub start domain
-/usr/local/bin/trisulctl_hub start context default  
 
 echo start Probe domain
 /usr/local/bin/trisulctl_probe start  domain
+
+
+echo capture context 
+/usr/local/bin/trisulctl_hub start context default@hub0  
+
 
 echo Starting Webtrisul
 /usr/local/share/webtrisul/build/webtrisuld start 
@@ -171,8 +178,12 @@ if [ ! -z "$START_INTERFACE" ]; then
 fi
 
 if [ ! -z "$START_INTERFACE" ]; then
-	echo Starting Suricata  on line  $START_INTERFACE
-	/usr/bin/suricata --user trisul -l /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
+	if [ ! -z "$NO_SURICATA" ]; then
+		echo We wont be running suricata on the interface $NO_SURICATA : user specified --no-ids option 
+	else 
+		echo Starting Suricata  on line  $START_INTERFACE
+		/usr/bin/suricata --user trisul -l /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
+	fi
 fi 
 
 
