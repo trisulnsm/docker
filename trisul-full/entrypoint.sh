@@ -82,11 +82,18 @@ rm -f /usr/local/var/lib/trisul-hub/domain0/run/trisul_cp_router.pid
 
 echo Mapping persistent directories DATA 
 if test -e /trisulroot/var; then 
+	echo == Found /trisulroot/var == Linking to /usr/local/var 
 	mv /usr/local/var /usr/local/var_docker
 	ln -sf /trisulroot/var /usr/local/var
 else
+	echo XX Not Found /trisulroot/var XX Initial run copy and link 
+	ls -l /usr/local/var
+	echo XX Copying /usr/local/var to /trisulroot/var 
 	cp -r /usr/local/var /trisulroot/var
+	echo XX Backing up old /usr/local/var to /usr/local/var_docker 
+	ls -l /usr/local/var 
 	mv /usr/local/var /usr/local/var_docker
+	echo XX Linking trisulroot/var 
 	ln -sf /trisulroot/var /usr/local/var
 fi  
 
