@@ -28,7 +28,7 @@ RUN apt-get update  &&  apt-get install -y  \
 
 # Packages
 COPY *.deb /root/
-RUN dpkg -i /root/trisul-probe_6.0.*-xenial_amd64.deb /root/trisul-hub_6.0.*-xenial_amd64.deb       /root/trisul-badfellas_6.0.*-xenial_amd64.deb  /root/trisul-geo_6.0.*-xenial_amd64.deb	   /root/trisul-urlfilter_6.0.*-xenial_amd64.deb /root/webtrisul_6.0.*-xenial_amd64.deb 
+RUN dpkg -i /root/trisul-probe_6.5.*-xenial_amd64.deb /root/trisul-hub_6.5.*-xenial_amd64.deb       /root/trisul-badfellas_6.5.*-xenial_amd64.deb  /root/trisul-geo_6.5.*-xenial_amd64.deb	   /root/trisul-urlfilter_6.5.*-xenial_amd64.deb /root/webtrisul_6.5.*-xenial_amd64.deb 
 
 # This layer overlays SURICATA config items 
 COPY oink.cron \
@@ -38,6 +38,12 @@ COPY oink.cron \
 	 emerging.rules.tar.gz \
 	 trisul_suricata.sh \
 	 /root/ 
+
+# Layer moves initial var and etc out of the way 
+RUN mv /usr/local/var /usr/local/var_init ; \
+    mv /usr/local/etc /usr/local/etc_init; \
+	mv /etc/suricata /etc/suricata_init; \
+	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_init 
 
 RUN echo 'PS1="DOCKER:\h:\W \u$ "' > /root/.bashrc 
 

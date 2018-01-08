@@ -48,7 +48,7 @@ fi
 if [ ! -z "$WEBSERVER_PORT" ]; then
 	echo NGINX Web server port changed to : $WEBSERVER_PORT
 	sed -i -E "s/listen.*;/listen $WEBSERVER_PORT;/" /usr/local/share/webtrisul/build/nginx.conf
-	/usr/local/bin/shell  /usr/local/var/lib/trisul-config/domain0/webtrisul/WEBTRISULDB.SQDB 'update webtrisul_options set value="4000" where name = "webtrisul_port";'
+	/usr/local/bin/shell  /usr/local/var_init/lib/trisul-config/domain0/webtrisul/WEBTRISULDB.SQDB "update webtrisul_options set value='$WEBSERVER_PORT' where name = 'webtrisul_port';"
 fi
 
 if [ ! -z "$WEBSOCKETS_PORT" ]; then
@@ -64,12 +64,6 @@ echo Stopping Webtrisul
 echo Removing the linkdev.db so incoming Image can  do migration of old DB on startup
 rm -f /usr/local/share/webtrisul/db/linkdev.db 
 
-echo Stopping Hub domain
-/usr/local/bin/trisulctl_hub stop context all   
-/usr/local/bin/trisulctl_hub stop domain
-
-echo Stopping Probe domain
-/usr/local/bin/trisulctl_probe stop  domain
 
 echo Clean up old pid files - within Docker PIDs repeat 
 rm -f /usr/local/var/lib/trisul-probe/domain0/probe0/run/trisul_cp_probe.pid
@@ -82,17 +76,12 @@ rm -f /usr/local/var/lib/trisul-hub/domain0/run/trisul_cp_router.pid
 
 echo Mapping persistent directories DATA 
 if test -e /trisulroot/var; then 
-	echo == Found /trisulroot/var == Linking to /usr/local/var 
-	mv /usr/local/var /usr/local/var_docker
+	echo == Found Existing Data and Config at /trisulroot/var == Linking to /usr/local/var 
 	ln -sf /trisulroot/var /usr/local/var
 else
 	echo XX Not Found /trisulroot/var XX Initial run copy and link 
-	ls -l /usr/local/var
-	echo XX Copying /usr/local/var to /trisulroot/var 
-	cp -r /usr/local/var /trisulroot/var
-	echo XX Backing up old /usr/local/var to /usr/local/var_docker 
-	ls -l /usr/local/var 
-	mv /usr/local/var /usr/local/var_docker
+	echo XX Copying /usr/local/var_init  to /trisulroot/var 
+	cp -r /usr/local/var_init  /trisulroot/var
 	echo XX Linking trisulroot/var 
 	ln -sf /trisulroot/var /usr/local/var
 fi  
@@ -100,14 +89,20 @@ fi
 
 echo Mapping persistent directories DATA CONFIG  for TrisulNSM 
 if test -e /trisulroot/etc; then 
-	mv /usr/local/etc /usr/local/etc_docker
+	echo RR Linking persistent Etc to image 
 	ln -sf /trisulroot/etc /usr/local/etc
 else
-	cp -r /usr/local/etc /trisulroot/etc
-	mv /usr/local/etc /usr/local/etc_docker
+	echo ZZ Creating and linking persistent ETC for trisul components 
+	cp -r /usr/local/etc_init  /trisulroot/etc
 	ln -sf /trisulroot/etc /usr/local/etc
 fi  
 
+echo Stopping Hub domain
+/usr/local/bin/trisulctl_hub stop context all   
+/usr/local/bin/trisulctl_hub stop domain
+
+echo Stopping Probe domain
+/usr/local/bin/trisulctl_probe stop  domain
 chown trisul.trisul /trisulroot/var/lib/trisul* -R 
 chown trisul.trisul /trisulroot/etc/trisul* -R 
 chown trisul.trisul /trisulroot/var/log/trisul* -R 
@@ -116,32 +111,30 @@ chown trisul.trisul /trisulroot/var/run/trisul -R
 
 echo Mapping persistent directories for Suricata and Oinkmaster 
 if test -e /trisulroot/suricata; then 
-	mv /etc/suricata/ /etc/suricata_docker
+	echo XX Reusing : linking persistent suricata and oinkmaster into image 
 	ln -sf /trisulroot/suricata/etc /etc/suricata
 
-	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_docker
 	ln -sf /trisulroot/oinkmaster.conf /etc/oinkmaster.conf 
 else
+	echo EE First time run  Initializing Suricata config 
     mkdir -p /trisulroot/suricata/etc 
 
 	echo ET Rules packaged ,, oink will update
-	tar xf /root/emerging.rules.tar.gz -C /etc/suricata 
+	tar xf /root/emerging.rules.tar.gz -C /etc/suricata_init
 
 	echo Replaing OINKMASTER with custom ET Updates 
 	cp /root/oinkmaster.conf  /etc/oinkmaster.conf 
 
-	echo Replaing custom YAML - we disable Suricata internal events 
-	cp -f /root/suricata-debian.yaml /etc/suricata/suricata-debian.yaml
+	echo Replacing custom YAML - we disable Suricata internal events 
+	cp -f /root/suricata-debian.yaml /etc/suricata_init/suricata-debian.yaml
 
-	echo Copy  over initial config to persistent area
-	cp -r /etc/suricata/*  /trisulroot/suricata/etc
-	mv /etc/suricata /etc/suricata_docker 
+	echo Copy  over initial suricata config to persistent area
+	cp -r /etc/suricata_init/*  /trisulroot/suricata/etc
 	ln -sf /trisulroot/suricata/etc /etc/suricata
 
 
-
-	cp -r /etc/oinkmaster.conf /trisulroot/suricata/oinkmaster.conf 
-	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_docker
+	echo Copy  over initial oinkmaster to persistent area 
+	cp -r /etc/oinkmaster.conf_init  /trisulroot/suricata/oinkmaster.conf 
 	ln -sf /trisulroot/oinkmaster.conf /etc/oinkmaster.conf 
 fi  
 
@@ -204,6 +197,9 @@ if [ ! -z "$CAPTURE_FILE" ]; then
 		/root/trisul_suricata.sh  $CAPTURE_FILE suricata 
 	fi
 fi 
+
+# system services 
+/usr/sbin/cron -n 
 
 
 echo Sleeping
