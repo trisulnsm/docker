@@ -123,6 +123,7 @@ Options
 3.  `--no-ids` : Do not run a second IDS analysis pass over the PCAP file. This option must be used only with the `--pcap` option
 4. `--webserver-port <port-number>` : Run the container webserver instance on this port. Default is 3000 
 5. `--websockets-port <port-number>` : Use this port for websockets. This is needed for the real time features of Trisul. 
+6. `--timezone <TZ>` : example `--timezone Asia/Kolkata` the names are the standard ones found in zoneinfo file 
 
 
 Developers
