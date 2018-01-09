@@ -16,6 +16,7 @@ while true; do
 	-f | --pcap )       CAPTURE_FILE="/trisulroot/$2"; shift 2 ;;
     --webserver-port )  WEBSERVER_PORT="$2"; shift 2 ;;
     --websockets-port ) WEBSOCKETS_PORT="$2"; shift 2 ;;
+    --timezone) 		TIMEZONE="$2"; shift 2 ;;
 	--no-ids )          NO_SURICATA="1"; shift 1;; 
     -- ) shift; break ;;
 	* ) if [ ! -z "$1" ]; then 
@@ -43,6 +44,20 @@ if [ ! -z "$NO_SURICATA" ]; then
 	echo "NOIDS --no-ids : We wont be running IDS over this PCAP file $CAPTURE_FILE"
 fi
 
+# Timezone will be UTC unless explicitly overridden 
+if [ ! -z "$TIMEZONE" ]; then
+	echo "TIMEZONE -- setting timezone to $TIMEZONE"
+	if [ ! -e  /usr/share/zoneinfo/$TIMEZONE ]; then 
+		echo "Invalid timezone specified $TIMEZONE,  defaulting to UTC" 
+		echo "TIMEZONE -- defaulting  to Etc/UTC" 
+		ln -sf /usr/share/zoneinfo/Etc/UTC   /etc/localtime 
+	else
+		ln -sf /usr/share/zoneinfo/$TIMEZONE  /etc/localtime 
+	fi 
+else
+	echo "TIMEZONE -- setting to Etc/UTC" 
+	ln -sf /usr/share/zoneinfo/Etc/UTC   /etc/localtime 
+fi
 
 # Fix the webserver port 
 if [ ! -z "$WEBSERVER_PORT" ]; then
