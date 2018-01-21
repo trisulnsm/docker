@@ -80,15 +80,6 @@ echo Removing the linkdev.db so incoming Image can  do migration of old DB on st
 rm -f /usr/local/share/webtrisul/db/linkdev.db 
 
 
-echo Clean up old pid files - within Docker PIDs repeat 
-rm -f /usr/local/var/lib/trisul-probe/domain0/probe0/run/trisul_cp_probe.pid
-rm -f /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run/trisul-probe.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/context0/run/flushd.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/context0/run/trp.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/run/trisul_cp_hub.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/run/trisul_cp_config.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/run/trisul_cp_router.pid
-
 echo Mapping persistent directories DATA 
 if test -e /trisulroot/var; then 
 	echo == Found Existing Data and Config at /trisulroot/var == Linking to /usr/local/var 
@@ -111,6 +102,26 @@ else
 	cp -r /usr/local/etc_init  /trisulroot/etc
 	ln -sf /trisulroot/etc /usr/local/etc
 fi  
+
+echo Mapping share/plugins with Badfellas INTEL for TrisulNSM
+if test -e /trisulroot/shareplugins_init; then 
+	echo ^^ Linking persistent SharePlugins 
+	ln -sf /trisulroot/shareplugins_init /usr/local/share/trisul-probe/plugins
+else
+	echo vv Creating and linking persistent Share plugins 
+	cp -r /usr/local/share/trisul-probe/shareplugins_init  /trisulroot/shareplugins_init
+	ln -sf /trisulroot/shareplugins_init /usr/local/share/trisul-probe/plugins
+fi  
+
+
+echo Clean up old pid files - within Docker PIDs repeat  easily 
+rm -f /usr/local/var/lib/trisul-probe/domain0/probe0/run/trisul_cp_probe.pid
+rm -f /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run/trisul-probe.pid
+rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/context0/run/flushd.pid
+rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/context0/run/trp.pid
+rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/run/trisul_cp_hub.pid
+rm -f /usr/local/var/lib/trisul-hub/domain0/run/trisul_cp_config.pid
+rm -f /usr/local/var/lib/trisul-hub/domain0/run/trisul_cp_router.pid
 
 echo Stopping Hub domain
 /usr/local/bin/trisulctl_hub stop context all   

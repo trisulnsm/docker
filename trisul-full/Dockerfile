@@ -43,6 +43,7 @@ COPY oink.cron \
 RUN mv /usr/local/var /usr/local/var_init ; \
     mv /usr/local/etc /usr/local/etc_init; \
 	mv /etc/suricata /etc/suricata_init; \
+	mv /usr/local/share/trisul-probe/plugins /usr/local/share/trisul-probe/shareplugins_init; \
 	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_init ; \
 	rm  /etc/localtime 
 
