@@ -66,12 +66,13 @@ In the above command, notice that you mapped the volume using `-v` of the host d
 Trisul has a multi layered analytics capability. A first pass analysis with Trisul is done over a PCAP dump, then a second layer is created and another pass with Suricata IDS.  This gives you full visibility with multiple tools.
 
 ````
-sudo docker run  --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 --pcap myPacketDump.pcap
+sudo docker run  --name=trisul1a \
+   --net=host -v /opt/trisul6_root:/trisulroot \
+       -d trisulnsm/trisul6 --pcap myPacketDump.pcap
 
 ````
 
-Note that the file `myPacketDump.pcap` has to be placed inside the `/opt/trisul6_root` volume so that the Docker image can see the outside file.
-
+**PCAP File Location** The file `myPacketDump.pcap` has to be placed inside the shared volume `/opt/trisul6_root` volume so that the Docker image can see the outside file.
 
 ---------------------
 
@@ -95,8 +96,10 @@ sudo docker run --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6
 By default TrisulNSM uses the `net:host` docker network and needs ports 3000 (for web access) and 3003 (for websockets) open. If you wish to change these ports use the `--webserver-port`  and `--websockets-port` options 
 
 ````
-sudo docker run --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 \
-  --interface enp5s0 --webserver-port 4000 --websockets-port 4003 
+sudo docker run --net=host \
+  -v /opt/trisul6_root:/trisulroot \
+     -d trisulnsm/trisul6 \
+       --interface enp5s0 --webserver-port 4000 --websockets-port 4003 
 ````
 
 
@@ -106,8 +109,10 @@ sudo docker run --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6
 We recommend that you assign a name using `--name` to the running docker instance , so you can log in to it easily. To assign `trisul1a` to a new instance 
 
 ````
-sudo docker run --name  trisul1a --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 \
-  --interface enp5s0 --webserver-port 4000 --websockets-port 4003 
+sudo docker run --name  trisul1a \
+  --net=host -v /opt/trisul6_root:/trisulroot \
+     -d trisulnsm/trisul6 \
+       --interface enp5s0 --webserver-port 4000 --websockets-port 4003 
 ````
 
 You can login to the docker using the usual -it switch 
