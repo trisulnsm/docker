@@ -131,6 +131,11 @@ Options
 4. `--webserver-port <port-number>` : Run the container webserver instance on this port. Default is 3000 
 5. `--websockets-port <port-number>` : Use this port for websockets. This is needed for the real time features of Trisul. 
 6. `--timezone <TZ>` : example `--timezone Asia/Kolkata` the names are the standard ones found in zoneinfo file 
+7. `--fine-resolution`: All metrics are tracked with a 1 second resolution. Use for small PCAP files 
+
+Docker Options
+==============
+1. `--privileged=true` : Add this flag to enable file extraction. Without this flag, the container will not be able to create and mount a tmpfs partition that is needed for the file extraction feature. 
 
 
 Developers

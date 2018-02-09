@@ -10,6 +10,7 @@ WEBSERVER_PORT=
 WEBSOCKETS_PORT=
 CAPTURE_FILE=
 NO_SURICATA=
+FINE_RESOLUTION="coarse"
 while true; do
   case "$1" in
 	-i | --interface )  START_INTERFACE="$2"; shift 2 ;;
@@ -18,6 +19,7 @@ while true; do
     --websockets-port ) WEBSOCKETS_PORT="$2"; shift 2 ;;
     --timezone) 		TIMEZONE="$2"; shift 2 ;;
 	--no-ids )          NO_SURICATA="1"; shift 1;; 
+	--fine-resolution)  FINE_RESOLUTION="fine"; shift 1;; 
     -- ) shift; break ;;
 	* ) if [ ! -z "$1" ]; then 
 			echo "Unknown option [$1]"; 
@@ -227,10 +229,10 @@ fi
 if [ ! -z "$CAPTURE_FILE" ]; then
 	if [ ! -z "$NO_SURICATA" ]; then
 		echo "Importing from capture file $CAPTURE_FILE into new context. No IDS  "
-		/root/trisul_suricata.sh  $CAPTURE_FILE no_ids 
+		/root/trisul_suricata.sh  $CAPTURE_FILE no_ids  $FINE_RESOLUTION
 	else
 		echo "Importing from capture file $CAPTURE_FILE into new context. Will also index with Suricata "
-		/root/trisul_suricata.sh  $CAPTURE_FILE suricata 
+		/root/trisul_suricata.sh  $CAPTURE_FILE suricata  $FINE_RESOLUTION
 	fi
 fi 
 

@@ -6,7 +6,7 @@
 # Prepare context name
 
 pcount=0
-TOTAL_STEPS=7
+TOTAL_STEPS=10
 show_progress_text(){
   pcount=$((pcount+1))
   echo -e "  $pcount/$TOTAL_STEPS $1"
@@ -22,6 +22,7 @@ get_xml_tag_value(){
 
 PCAP_FILE=$1
 USE_IDS=$2 
+FINE_RESOLUTION=$3 
 if ! test -e $PCAP_FILE; then
   echo "PCAP file does not exist : $PCAP_FILE"
   exit
@@ -41,13 +42,19 @@ file_name=$(echo $file_name | tr -dc '[:alnum:]\n\r'| tr '[:upper:]' '[:lower:]'
 
 wc_count=$(find /usr/local/etc/trisul-hub/domain0/hub0/context_*  -type d  | wc -l)
 wc_count=$((wc_count+1)) 
-context_name=$file_name$wc_count
+if (( ${#file_name} > 10 )) ; then 
+	echo "XXX Warning : Pcapfilename top big for context, truncating"
+	file_name_short=${file_name: 0:5}_${file_name: -8}
+	echo "Truncated to $file_name_short"
+else
+	file_name_short=$file_name
+fi 
+context_name=$file_name_short$wc_count
 
 config_file="/usr/local/etc/trisul-probe/domain0/probe0/context_$context_name/trisulProbeConfig.xml"
 
 show_progress_text "Stopping webtrisul to conserve memory" 
 /usr/local/share/webtrisul/build/webtrisuld stop
-
 
 show_progress_text "Creating new context $context_name"
 
@@ -61,9 +68,30 @@ while test -d /proc/$pid; do
  sleep 2
 done
 
+show_progress_text "Preparting Context, copying LUA Apps"
+cp -r /usr/local/var/lib/trisul-config/domain0/context0/profile0/lua/* /usr/local/var/lib/trisul-config/domain0/context_$context_name/profile0/lua/ 
+chown trisul.trisul -R /usr/local/var/lib/trisul-config/domain0/context_$context_name/profile0/lua/ 
+
+show_progress_text "Adjusting resolution"
+if [ ${FINE_RESOLUTION} == "fine" ]; then 
+	echo "FINE Resolution requested, adjusting bucket size to 1s and topper size = 60s"
+	/usr/local/bin/shell /usr/local/var/lib/trisul-config/domain0/context_$context_name/profile0/TRISULCONFIG.SQDB 'update trisul_counter_groups set BucketSizeMS=1000, TopNCommitIntervalSecs=60;' 
+
+fi 
+
+show_progress_text "Creating RAMFS for file extraction "
+/usr/local/bin/trisulctl_probe "set config $context_name@probe0  Reassembly>FileExtraction>Enabled=true"
+RAMFSDIR=/usr/local/var/lib/trisul-probe/domain0/probe0/context_$context_name/run/ramfs
+mkdir $RAMFSDIR
+mount -t tmpfs -o size=20m  tmpfs $RAMFSDIR
+
+
 show_progress_text "Running trisul in offline mode"
 
 /usr/local/bin/trisul -nodemon /usr/local/etc/trisul-probe/domain0/probe0/context_$context_name/trisulProbeConfig.xml -mode offline -in $PCAP_FILE
+
+echo "Unmounting RAMFS "
+umount $RAMFSDIR
 
 
 if  [ "$USE_IDS" == "suricata" ]; then 
