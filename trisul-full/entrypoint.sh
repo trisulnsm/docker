@@ -129,7 +129,12 @@ echo Stopping Hub domain
 
 echo Stopping Probe domain
 /usr/local/bin/trisulctl_probe stop  domain
-chown trisul.trisul /trisulroot/var/lib/trisul* -R 
+
+currowner=$(stat -c '%U' /trisulroot/var/lib/trisul-probe/domain0/probe0/context0)
+if [ $currowner != 'trisul' ]; then 
+	echo "Changing  ownership of databases , current owner: $currowner"
+	chown trisul.trisul /trisulroot/var/lib/trisul* -R 
+fi 
 chown trisul.trisul /trisulroot/etc/trisul* -R 
 chown trisul.trisul /trisulroot/var/log/trisul* -R 
 chown trisul.trisul /trisulroot/var/run/trisul -R 
@@ -170,7 +175,12 @@ cp /root/suricata_eve_unixsocket.lua /usr/local/lib/trisul-probe/plugins/lua/
 echo Adding OINK to CRONTAB
 crontab /root/oink.cron 
 
-chown trisul.trisul /trisulroot/var/lib/trisul* -R 
+currowner=$(stat -c '%U' /trisulroot/var/lib/trisul-probe/domain0/probe0/context0)
+if [ $currowner != 'trisul' ]; then 
+	echo "Changing  ownership of databases , current owner: $currowner"
+	chown trisul.trisul /trisulroot/var/lib/trisul* -R 
+fi
+
 chown trisul.trisul /trisulroot/etc/trisul* -R 
 chown trisul.trisul /trisulroot/var/log/trisul* -R 
 chown trisul.trisul /trisulroot/var/run/trisul -R 

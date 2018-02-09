@@ -3,6 +3,8 @@ Trisul Network Analytics : Network Security Monitoring in a Docker
 
 A full blown Network Security and Traffic Monitoring (NSM) solution you can deploy in 1 minute.
 
+> New Feb 09 2018 :  Added LevelDB package to the Docker Image, this is used by many scripts for lookups.
+
 [Docker Hub trisulnsm/trisul6](https://hub.docker.com/r/trisulnsm/trisul6/) 
 
 

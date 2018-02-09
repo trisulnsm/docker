@@ -23,6 +23,7 @@ RUN apt-get update  &&  apt-get install -y  \
 		binutils  \
 		nano  \
 		librsvg2-bin \
+		libleveldb1v5 \
 		suricata  \
 	&& rm -rf /var/lib/apt/lists/*
 
