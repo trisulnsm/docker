@@ -6,7 +6,7 @@ LABEL 	org.trisul.project="trisul" \
         maintainer="github.com/trisulnsm" \
 		project="Trisul Network Analytics Full" \
 		description="Trisul Probe, Hub, and Web in a single container" \
-		version="6" 
+		version="6.5" 
 
 
 # Usual update
@@ -24,8 +24,13 @@ RUN apt-get update  &&  apt-get install -y  \
 		nano  \
 		librsvg2-bin \
 		libleveldb1v5 \
-		suricata  \
+		snmp \
+		suricata  
+
+# Tshark alone in non-interactive
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tshark \
 	&& rm -rf /var/lib/apt/lists/*
+    
 
 # Packages
 COPY *.deb /root/
