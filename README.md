@@ -10,7 +10,7 @@ A full blown Network Security and Traffic Monitoring (NSM) solution you can depl
 Other links
 -----------
 
-[Docker Hub trisulnsm/trisul6](https://hub.docker.com/r/trisulnsm/trisul6/) 
+[Docker Hub trisulnsm/trisul6](https://hub.docker.com/r/trisulnsm/trisul6/)  || 
 [Trisul DevZone Docker articles](https://www.trisul.org/devzone/doku.php/articles) 
 
 
