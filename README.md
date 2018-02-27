@@ -3,10 +3,15 @@ Trisul Network Analytics : Network Security Monitoring in a Docker
 
 A full blown Network Security and Traffic Monitoring (NSM) solution you can deploy in 1 minute.
 
-> New Feb 22 2018 :  Added tshark and snmp. With tshark "Quick PCAP" view will give you a one line summary per packet, without you having to download the full PCAP. SNMP allows you to use Trisul like a SNMP Mgmt Server using the SNMP Lua Script. 
+> New Feb 22 2018 :  Added tshark and snmp. With tshark "Quick PCAP" view will give you a one line summary per packet, without you having to download the full PCAP. SNMP tools can add interface or any other metrics using the SNMP Lua Script and to resolve Netflow interfaces and router names. 
+
 > New Feb 09 2018 :  Added LevelDB package to the Docker Image, this is used by many scripts for lookups.
 
+Other links
+-----------
+
 [Docker Hub trisulnsm/trisul6](https://hub.docker.com/r/trisulnsm/trisul6/) 
+[Trisul DevZone Docker articles](https://www.trisul.org/devzone/doku.php/articles) 
 
 
 - Full traffic monitoring - 100s of metrics from every angle
