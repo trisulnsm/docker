@@ -3,6 +3,8 @@ Trisul Network Analytics : Network Security Monitoring in a Docker
 
 A full blown Network Security and Traffic Monitoring (NSM) solution you can deploy in 1 minute.
 
+> New Mar 02 2018 :  --enable-file-extraction flag 
+
 > New Feb 22 2018 :  Added tshark and snmp. With tshark "Quick PCAP" view will give you a one line summary per packet, without you having to download the full PCAP. SNMP tools can add interface or any other metrics using the SNMP Lua Script and to resolve Netflow interfaces and router names. 
 
 > New Feb 09 2018 :  Added LevelDB package to the Docker Image, this is used by many scripts for lookups.
@@ -138,10 +140,11 @@ Options
 5. `--websockets-port <port-number>` : Use this port for websockets. This is needed for the real time features of Trisul. 
 6. `--timezone <TZ>` : example `--timezone Asia/Kolkata` the names are the standard ones found in zoneinfo file 
 7. `--fine-resolution`: All metrics are tracked with a 1 second resolution. Use for small PCAP files 
+8. `--enable-file-extraction` : Enables file extraction feature for the "Save Binaries App". This option creates a TMPFS filesystem, hence to use this option please also use the `--privileged=true` docker option. 
 
 Docker Options
 ==============
-1. `--privileged=true` : Add this flag to enable file extraction. Without this flag, the container will not be able to create and mount a tmpfs partition that is needed for the file extraction feature. 
+1. `--privileged=true` : Add this flag to enable file extraction. We need privileged access in order to create and mount a tmpfs partition needed for the file extraction feature.  
 
 
 Developers

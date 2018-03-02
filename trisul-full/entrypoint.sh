@@ -10,16 +10,18 @@ WEBSERVER_PORT=
 WEBSOCKETS_PORT=
 CAPTURE_FILE=
 NO_SURICATA=
+ENABLE_FILE_EXTRACTION=
 FINE_RESOLUTION="coarse"
 while true; do
   case "$1" in
-	-i | --interface )  START_INTERFACE="$2"; shift 2 ;;
-	-f | --pcap )       CAPTURE_FILE="/trisulroot/$2"; shift 2 ;;
-    --webserver-port )  WEBSERVER_PORT="$2"; shift 2 ;;
-    --websockets-port ) WEBSOCKETS_PORT="$2"; shift 2 ;;
-    --timezone) 		TIMEZONE="$2"; shift 2 ;;
-	--no-ids )          NO_SURICATA="1"; shift 1;; 
-	--fine-resolution)  FINE_RESOLUTION="fine"; shift 1;; 
+	-i | --interface )  		START_INTERFACE="$2"; shift 2 ;;
+	-f | --pcap )       		CAPTURE_FILE="/trisulroot/$2"; shift 2 ;;
+    --webserver-port )  		WEBSERVER_PORT="$2"; shift 2 ;;
+    --websockets-port ) 		WEBSOCKETS_PORT="$2"; shift 2 ;;
+    --timezone) 				TIMEZONE="$2"; shift 2 ;;
+	--no-ids )          		NO_SURICATA="1"; shift 1;; 
+	--fine-resolution)  		FINE_RESOLUTION="fine"; shift 1;; 
+	--enable-file-extraction)   ENABLE_FILE_EXTRACTION="1"; shift 1;; 
     -- ) shift; break ;;
 	* ) if [ ! -z "$1" ]; then 
 			echo "Unknown option [$1]"; 
@@ -199,6 +201,15 @@ echo start Probe domain
 echo capture context 
 /usr/local/bin/trisulctl_hub start context default@hub0  
 
+# if user wants ramfs (for file extraction) 
+if [ ! -z "$ENABLE_FILE_EXTRACTION" ]; then
+echo "Creating TMPFS partition with size 20MB" 
+/usr/local/bin/trisulctl_hub "set config default@probe0  Reassembly>FileExtraction>Enabled=true"
+RAMFSDIR=/usr/local/var/lib/trisul-probe/domain0/probe0/context0/run/ramfs
+mkdir $RAMFSDIR
+mount -t tmpfs -o size=20m  tmpfs $RAMFSDIR
+fi 
+
 
 echo Starting Webtrisul
 /usr/local/share/webtrisul/build/webtrisuld start 
@@ -240,5 +251,5 @@ fi
 /usr/sbin/cron -n 
 
 
-echo Sleeping
+echo Started TrisulNSM docker image. Sleeping. 
 sleep infinity 

@@ -6,10 +6,12 @@
 # Prepare context name
 
 pcount=0
-TOTAL_STEPS=10
+TOTAL_STEPS=11
 show_progress_text(){
   pcount=$((pcount+1))
+  echo -e "\e[32m"
   echo -e "  $pcount/$TOTAL_STEPS $1"
+  echo -e "\e[0m"
 }
 get_xml_tag_value(){
   xml_file=$1
@@ -68,7 +70,7 @@ while test -d /proc/$pid; do
  sleep 2
 done
 
-show_progress_text "Preparting Context, copying LUA Apps"
+show_progress_text "Preparing Context, copying LUA Apps"
 cp -r /usr/local/var/lib/trisul-config/domain0/context0/profile0/lua/* /usr/local/var/lib/trisul-config/domain0/context_$context_name/profile0/lua/ 
 chown trisul.trisul -R /usr/local/var/lib/trisul-config/domain0/context_$context_name/profile0/lua/ 
 
@@ -79,12 +81,17 @@ if [ ${FINE_RESOLUTION} == "fine" ]; then
 
 fi 
 
+
 show_progress_text "Creating RAMFS for file extraction "
 /usr/local/bin/trisulctl_probe "set config $context_name@probe0  Reassembly>FileExtraction>Enabled=true"
 RAMFSDIR=/usr/local/var/lib/trisul-probe/domain0/probe0/context_$context_name/run/ramfs
 mkdir $RAMFSDIR
 mount -t tmpfs -o size=20m  tmpfs $RAMFSDIR
 
+
+
+show_progress_text "Disabling active Name resolution for PCAP imports "
+/usr/local/bin/trisulctl_hub "set config $context_name@probe0  DBTasks>ResolveIP>Enable=false"
 
 show_progress_text "Running trisul in offline mode"
 
