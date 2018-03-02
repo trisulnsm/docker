@@ -91,7 +91,7 @@ mount -t tmpfs -o size=20m  tmpfs $RAMFSDIR
 
 
 show_progress_text "Disabling active Name resolution for PCAP imports "
-/usr/local/bin/trisulctl_hub "set config $context_name@probe0  DBTasks>ResolveIP>Enable=false"
+/usr/local/bin/trisulctl_hub "set config $context_name@hub0  DBTasks>ResolveIP>Enable=false"
 
 show_progress_text "Running trisul in offline mode"
 
@@ -129,6 +129,10 @@ if  [ "$USE_IDS" == "suricata" ]; then
 	/usr/local/bin/trisulctl_probe start context $context_name@probe0  tool=pipeeof 
 
 fi 
+
+
+# restarting hub : was issue with counter group info 
+/usr/local/bin/trisulctl_hub restart context $context_name@hub0  
 
 show_progress_text "Restarting Webtrisul " 
 /usr/local/share/webtrisul/build/webtrisuld start 

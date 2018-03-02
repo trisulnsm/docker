@@ -40,7 +40,8 @@ if [ ! -z "$CAPTURE_FILE" ]; then
 	echo "PCAP Capture file set to  $CAPTURE_FILE"
 
 	if [ ! -e  $CAPTURE_FILE ]; then 
-		echo "Cannot find PCAP file $CAPTURE_FILE. You need to put in on the root directory"
+		echo "Cannot find PCAP file $CAPTURE_FILE. "
+		echo "You need to place the pcap file inside the shared docker volume as specified in -v "
 	fi 
 fi
 
@@ -94,6 +95,19 @@ else
 	cp -r /usr/local/var_init  /trisulroot/var
 	echo XX Linking trisulroot/var 
 	ln -sf /trisulroot/var /usr/local/var
+fi  
+
+echo Mapping webtrisul Plugins  
+if test -e /trisulroot/webtrisul_public_plugins_init; then 
+	echo == Found Existing Data and Config. Linking webtrisul public plugins 
+	ln -sf /trisulroot/webtrisul_public_plugins_init  /usr/local/share/webtrisul/public/plugins
+else
+	echo XX Not Found /trisulroot/var XX Initial run copy and link 
+	echo XX Copying /usr/local/share/webtrisul/public/plugins_init to /trisulroot/var/webtrisul_public_plugins
+	cp -r /usr/local/share/webtrisul/public/plugins_init  /trisulroot/webtrisul_public_plugins_init
+	chown -R trisul.trisul /trisulroot/webtrisul_public_plugins_init  
+	echo XX Linking webtrisul_public_plugins
+	ln -sf /trisulroot/webtrisul_public_plugins_init  /usr/local/share/webtrisul/public/plugins
 fi  
 
 

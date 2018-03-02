@@ -51,6 +51,7 @@ RUN mv /usr/local/var /usr/local/var_init ; \
 	mv /etc/suricata /etc/suricata_init; \
 	mv /usr/local/share/trisul-probe/plugins /usr/local/share/trisul-probe/shareplugins_init; \
 	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_init ; \
+	mv /usr/local/share/webtrisul/public/plugins  /usr/local/share/webtrisul/public/plugins_init; \
 	rm  /etc/localtime 
 
 RUN echo 'PS1="DOCKER:\h:\W \u$ "' > /root/.bashrc 
