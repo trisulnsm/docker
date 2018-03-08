@@ -142,6 +142,16 @@ Options
 7. `--fine-resolution`: All metrics are tracked with a 1 second resolution. Use for small PCAP files 
 8. `--enable-file-extraction` : Enables file extraction feature for the "Save Binaries App". This option creates a TMPFS filesystem, hence to use this option please also use the `--privileged=true` docker option. 
 
+Trust
+-----
+
+If you get the following error when you do a `docker pull` ;  try `export DOCKER_CONTENT_TRUST=0`
+
+````
+Error: remote trust data does not exist for docker.io/trisulnsm/trisul6: notary.docker.io does not have trust data for docker.io/trisulnsm/trisul6
+````
+
+
 Docker Options
 ==============
 1. `--privileged=true` : Add this flag to enable file extraction. We need privileged access in order to create and mount a tmpfs partition needed for the file extraction feature.  
