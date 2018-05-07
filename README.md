@@ -141,6 +141,7 @@ Options
 6. `--timezone <TZ>` : example `--timezone Asia/Kolkata` the names are the standard ones found in zoneinfo file 
 7. `--fine-resolution`: All metrics are tracked with a 1 second resolution. Use for small PCAP files 
 8. `--enable-file-extraction` : Enables file extraction feature for the "Save Binaries App". This option creates a TMPFS filesystem, hence to use this option please also use the `--privileged=true` docker option. 
+9. `--context-name <context name>` : You may want to use this option with PCAP import, specifiy a context name instead of trying to compute one from the PCAP filename. 
 
 Trust Error
 -----
