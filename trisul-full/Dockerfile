@@ -25,6 +25,7 @@ RUN apt-get update  &&  apt-get install -y  \
 		librsvg2-bin \
 		libleveldb1v5 \
 		snmp \
+		bsdmainutils \
 		suricata  
 
 # Tshark alone in non-interactive
@@ -54,7 +55,7 @@ RUN mv /usr/local/var /usr/local/var_init ; \
 	mv /usr/local/share/webtrisul/public/plugins  /usr/local/share/webtrisul/public/plugins_init; \
 	rm  /etc/localtime 
 
-RUN echo 'PS1="DOCKER:\h:\W \u$ "' > /root/.bashrc 
+RUN echo 'PS1="DOCKER:\h:\u \W$ "' > /root/.bashrc 
 
 # Entry point script 
 COPY entrypoint.sh /root 

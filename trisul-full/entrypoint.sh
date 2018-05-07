@@ -12,6 +12,7 @@ CAPTURE_FILE=
 NO_SURICATA=
 ENABLE_FILE_EXTRACTION=
 FINE_RESOLUTION="coarse"
+USECONTEXTNAME="assign"
 while true; do
   case "$1" in
 	-i | --interface )  		START_INTERFACE="$2"; shift 2 ;;
@@ -21,6 +22,7 @@ while true; do
     --timezone) 				TIMEZONE="$2"; shift 2 ;;
 	--no-ids )          		NO_SURICATA="1"; shift 1;; 
 	--fine-resolution)  		FINE_RESOLUTION="fine"; shift 1;; 
+	--context-name)             USECONTEXTNAME="$2"; shift 2;;  
 	--enable-file-extraction)   ENABLE_FILE_EXTRACTION="1"; shift 1;; 
     -- ) shift; break ;;
 	* ) if [ ! -z "$1" ]; then 
@@ -44,6 +46,7 @@ if [ ! -z "$CAPTURE_FILE" ]; then
 		echo "You need to place the pcap file inside the shared docker volume as specified in -v "
 	fi 
 fi
+
 
 if [ ! -z "$NO_SURICATA" ]; then
 	echo "NOIDS --no-ids : We wont be running IDS over this PCAP file $CAPTURE_FILE"
@@ -90,10 +93,10 @@ if test -e /trisulroot/var; then
 	echo == Found Existing Data and Config at /trisulroot/var == Linking to /usr/local/var 
 	ln -sf /trisulroot/var /usr/local/var
 else
-	echo XX Not Found /trisulroot/var XX Initial run copy and link 
-	echo XX Copying /usr/local/var_init  to /trisulroot/var 
+	echo ++ Not Found /trisulroot/var XX Initial run copy and link 
+	echo ++ Copying /usr/local/var_init  to /trisulroot/var 
 	cp -r /usr/local/var_init  /trisulroot/var
-	echo XX Linking trisulroot/var 
+	echo ++ Linking trisulroot/var 
 	ln -sf /trisulroot/var /usr/local/var
 fi  
 
@@ -102,11 +105,11 @@ if test -e /trisulroot/webtrisul_public_plugins_init; then
 	echo == Found Existing Data and Config. Linking webtrisul public plugins 
 	ln -sf /trisulroot/webtrisul_public_plugins_init  /usr/local/share/webtrisul/public/plugins
 else
-	echo XX Not Found /trisulroot/var XX Initial run copy and link 
-	echo XX Copying /usr/local/share/webtrisul/public/plugins_init to /trisulroot/var/webtrisul_public_plugins
+	echo ++ Not Found /trisulroot/var XX Initial run copy and link 
+	echo ++ Copying /usr/local/share/webtrisul/public/plugins_init to /trisulroot/var/webtrisul_public_plugins
 	cp -r /usr/local/share/webtrisul/public/plugins_init  /trisulroot/webtrisul_public_plugins_init
 	chown -R trisul.trisul /trisulroot/webtrisul_public_plugins_init  
-	echo XX Linking webtrisul_public_plugins
+	echo ++ Linking webtrisul_public_plugins
 	ln -sf /trisulroot/webtrisul_public_plugins_init  /usr/local/share/webtrisul/public/plugins
 fi  
 
@@ -160,7 +163,7 @@ chown trisul.trisul /trisulroot/var/run/trisul -R
 
 echo Mapping persistent directories for Suricata and Oinkmaster 
 if test -e /trisulroot/suricata; then 
-	echo XX Reusing : linking persistent suricata and oinkmaster into image 
+	echo ++ Reusing : linking persistent suricata and oinkmaster into image 
 	ln -sf /trisulroot/suricata/etc /etc/suricata
 
 	ln -sf /trisulroot/oinkmaster.conf /etc/oinkmaster.conf 
@@ -220,7 +223,7 @@ if [ ! -z "$ENABLE_FILE_EXTRACTION" ]; then
 echo "Creating TMPFS partition with size 20MB" 
 /usr/local/bin/trisulctl_hub "set config default@probe0  Reassembly>FileExtraction>Enabled=true"
 RAMFSDIR=/usr/local/var/lib/trisul-probe/domain0/probe0/context0/run/ramfs
-mkdir $RAMFSDIR
+mkdir -p $RAMFSDIR
 mount -t tmpfs -o size=20m  tmpfs $RAMFSDIR
 fi 
 
@@ -254,10 +257,10 @@ fi
 if [ ! -z "$CAPTURE_FILE" ]; then
 	if [ ! -z "$NO_SURICATA" ]; then
 		echo "Importing from capture file $CAPTURE_FILE into new context. No IDS  "
-		/root/trisul_suricata.sh  $CAPTURE_FILE no_ids  $FINE_RESOLUTION
+		/root/trisul_suricata.sh  $CAPTURE_FILE no_ids  $FINE_RESOLUTION $USECONTEXTNAME
 	else
 		echo "Importing from capture file $CAPTURE_FILE into new context. Will also index with Suricata "
-		/root/trisul_suricata.sh  $CAPTURE_FILE suricata  $FINE_RESOLUTION
+		/root/trisul_suricata.sh  $CAPTURE_FILE suricata  $FINE_RESOLUTION $USECONTEXTNAME
 	fi
 fi 
 

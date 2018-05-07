@@ -6,7 +6,7 @@
 # Prepare context name
 
 pcount=0
-TOTAL_STEPS=11
+TOTAL_STEPS=12
 show_progress_text(){
   pcount=$((pcount+1))
   echo -e "\e[32m"
@@ -25,6 +25,8 @@ get_xml_tag_value(){
 PCAP_FILE=$1
 USE_IDS=$2 
 FINE_RESOLUTION=$3 
+USECONTEXTNAME=$4
+
 if ! test -e $PCAP_FILE; then
   echo "PCAP file does not exist : $PCAP_FILE"
   exit
@@ -42,16 +44,28 @@ file_name="${file_name%.*}"
 #remove the special characters from file name
 file_name=$(echo $file_name | tr -dc '[:alnum:]\n\r'| tr '[:upper:]' '[:lower:]')
 
-wc_count=$(find /usr/local/etc/trisul-hub/domain0/hub0/context_*  -type d  | wc -l)
-wc_count=$((wc_count+1)) 
-if (( ${#file_name} > 10 )) ; then 
-	echo "XXX Warning : Pcapfilename top big for context, truncating"
-	file_name_short=${file_name: 0:5}_${file_name: -8}
-	echo "Truncated to $file_name_short"
+
+if [ ${USECONTEXTNAME} == "assign" ]; then 
+	wc_count=$(find /usr/local/etc/trisul-hub/domain0/hub0/context_*  -type d  | wc -l)
+	wc_count=$((wc_count+1)) 
+	if (( ${#file_name} > 10 )) ; then 
+		echo "!++ Warning : Pcapfilename top big for context, truncating"
+		file_name_short=${file_name: 0:5}_${file_name: -6}
+		echo "Truncated to $file_name_short"
+	else
+		file_name_short=$file_name
+	fi 
+	context_name=$file_name_short$wc_count
 else
-	file_name_short=$file_name
+	echo "Using user specified context name $USECONTEXTNAME" 
+	context_name=$USECONTEXTNAME
+	if test -e "/usr/local/etc/trisul-probe/domain0/probe0/context_$context_name/trisulProbeConfig.xml"; then 
+		echo "ERROR: User specifiec context name $USECONTEXTNAME, already exists. Choose another name and retry"
+		exit  -1 
+	fi 
 fi 
-context_name=$file_name_short$wc_count
+
+
 
 config_file="/usr/local/etc/trisul-probe/domain0/probe0/context_$context_name/trisulProbeConfig.xml"
 
@@ -92,6 +106,9 @@ mount -t tmpfs -o size=20m  tmpfs $RAMFSDIR
 
 show_progress_text "Disabling active Name resolution for PCAP imports "
 /usr/local/bin/trisulctl_hub "set config $context_name@hub0  DBTasks>ResolveIP>Enable=false"
+
+show_progress_text "Changing analysis Queue capacity to 10000 for PCAP import"
+/usr/local/bin/trisulctl_hub "set config $context_name@probe0  Tuning>AnalysisQueueCapacity=10000"
 
 show_progress_text "Running trisul in offline mode"
 

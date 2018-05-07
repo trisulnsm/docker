@@ -142,7 +142,7 @@ Options
 7. `--fine-resolution`: All metrics are tracked with a 1 second resolution. Use for small PCAP files 
 8. `--enable-file-extraction` : Enables file extraction feature for the "Save Binaries App". This option creates a TMPFS filesystem, hence to use this option please also use the `--privileged=true` docker option. 
 
-Trust
+Trust Error
 -----
 
 If you get the following error when you do a `docker pull` ;  try `export DOCKER_CONTENT_TRUST=0`
