@@ -196,9 +196,6 @@ else
 	ln -sf /trisulroot/oinkmaster.conf /etc/oinkmaster.conf 
 fi  
 
-echo Adding suricata_eve_unixsocket.lua APP to probe 
-cp /root/suricata_eve_unixsocket.lua /usr/local/lib/trisul-probe/plugins/lua/ 
-
 echo Adding OINK to CRONTAB
 crontab /root/oink.cron 
 
