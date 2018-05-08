@@ -105,12 +105,18 @@ if test -e /trisulroot/webtrisul_public_plugins_init; then
 	echo == Found Existing Data and Config. Linking webtrisul public plugins 
 	ln -sf /trisulroot/webtrisul_public_plugins_init  /usr/local/share/webtrisul/public/plugins
 else
-	echo ++ Not Found /trisulroot/var XX Initial run copy and link 
+	echo ++ Initialize /trisulroot/var ++ Initial run copy and link 
 	echo ++ Copying /usr/local/share/webtrisul/public/plugins_init to /trisulroot/var/webtrisul_public_plugins
 	cp -r /usr/local/share/webtrisul/public/plugins_init  /trisulroot/webtrisul_public_plugins_init
 	chown -R trisul.trisul /trisulroot/webtrisul_public_plugins_init  
 	echo ++ Linking webtrisul_public_plugins
 	ln -sf /trisulroot/webtrisul_public_plugins_init  /usr/local/share/webtrisul/public/plugins
+	echo ++ Installing default Trisul APP dashboards 
+	tar xf dash.tar.gz -C  /usr/local/share/webtrisul/public/plugins 
+	echo ++ Installing default Trisul LUA analytics  
+	tar xf luaplugs.tar.gz -C  /usr/local/var/lib/trisul-config/domain0/context0/profile0/lua
+	echo ++ Installing default WEBTRISULDB
+	cp -f  WEBTRISUL_DEFAULT.SQDB  /usr/local/var/lib/trisul-config/domain0/webtrisul/WEBTRISULDB.SQDB  
 fi  
 
 

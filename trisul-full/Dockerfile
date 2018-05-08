@@ -41,8 +41,10 @@ RUN dpkg -i /root/trisul-probe_6.5.*-xenial_amd64.deb /root/trisul-hub_6.5.*-xen
 COPY oink.cron \
      oinkmaster.conf \
 	 suricata-debian.yaml \
-	 suricata_eve_unixsocket.lua \
 	 emerging.rules.tar.gz \
+	 luaplugs.tar.gz \
+	 dash.tar.gz \
+	 WEBTRISUL_DEFAULT.SQDB \
 	 trisul_suricata.sh \
 	 /root/ 
 
