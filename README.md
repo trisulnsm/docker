@@ -167,7 +167,14 @@ Developers
 2. Run
 
 ````docker
-sudo docker build -t trisul-full .
+docker build -t trisul-full .
+
+# To tag and push to docker hub 
+docker images
+docker tag   5506cc84148b trisulnsm/trisul6:latest
+docker login
+docker push trisulnsm/trisul6:latest
+
 ````
 
 

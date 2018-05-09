@@ -6,7 +6,7 @@
 # Prepare context name
 
 pcount=0
-TOTAL_STEPS=12
+TOTAL_STEPS=13
 show_progress_text(){
   pcount=$((pcount+1))
   echo -e "\e[32m"
@@ -90,7 +90,7 @@ chown trisul.trisul -R /usr/local/var/lib/trisul-config/domain0/context_$context
 
 show_progress_text "Adjusting resolution"
 if [ ${FINE_RESOLUTION} == "fine" ]; then 
-	echo "FINE Resolution requested, adjusting bucket size to 1s and topper size = 60s"
+	echo "    Fine timeseries resolution requested. Adjusting  bucket_size=1s , topper size=60s"
 	/usr/local/bin/shell /usr/local/var/lib/trisul-config/domain0/context_$context_name/profile0/TRISULCONFIG.SQDB 'update trisul_counter_groups set BucketSizeMS=1000, TopNCommitIntervalSecs=60;' 
 
 fi 
@@ -110,11 +110,16 @@ show_progress_text "Disabling active Name resolution for PCAP imports "
 show_progress_text "Changing analysis Queue capacity to 10000 for PCAP import"
 /usr/local/bin/trisulctl_hub "set config $context_name@probe0  Tuning>AnalysisQueueCapacity=10000"
 
-show_progress_text "Running trisul in offline mode"
+
+show_progress_text "Creating overlay layer for new context and restarting hub"
+/usr/local/bin/trisulctl_hub "set config $context_name  addlayer=overlay"
+/usr/local/bin/trisulctl_hub "restart context $context_name@hub0" 
+
+show_progress_text "Running trisul in offline mode over the PCAP repository (could take a few minutes)"
 
 /usr/local/bin/trisul -nodemon /usr/local/etc/trisul-probe/domain0/probe0/context_$context_name/trisulProbeConfig.xml -mode offline -in $PCAP_FILE
 
-echo "Unmounting RAMFS "
+echo "    Unmounting RAMFS "
 umount $RAMFSDIR
 
 
@@ -123,7 +128,7 @@ if  [ "$USE_IDS" == "suricata" ]; then
 	logdir=$(get_xml_tag_value $config_file "UnixSocket")
 	logdir=$(dirname $logdir)
 
-	echo Logdir for IDS overlay set to $logdir 
+	echo "    Logdir for IDS overlay set to $logdir "
 
 	show_progress_text  "Starting trisul in ids alert mode(demon)"
 	/usr/local/bin/trisul -demon /usr/local/etc/trisul-probe/domain0/probe0/context_$context_name/trisulProbeConfig.xml -mode idsalertoverlay
@@ -135,7 +140,7 @@ if  [ "$USE_IDS" == "suricata" ]; then
 	done 
 
 
-	show_progress_text "Running suricata "
+	show_progress_text "Running suricata over the PCAP repository now (could take a few minutes)"
 	user=$(get_xml_tag_value $config_file "User")
 	IFS='.'; user=($user); unset IFS;
 	user="${user[0]}" 

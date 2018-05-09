@@ -122,7 +122,7 @@ fi
 
 echo Mapping persistent directories DATA CONFIG  for TrisulNSM 
 if test -e /trisulroot/etc; then 
-	echo RR Linking persistent Etc to image 
+	echo ++ Linking persistent Etc to image 
 	ln -sf /trisulroot/etc /usr/local/etc
 else
 	echo ZZ Creating and linking persistent ETC for trisul components 
