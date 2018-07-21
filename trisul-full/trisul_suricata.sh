@@ -6,7 +6,7 @@
 # Prepare context name
 
 pcount=0
-TOTAL_STEPS=13
+TOTAL_STEPS=12
 show_progress_text(){
   pcount=$((pcount+1))
   echo -e "\e[32m"
@@ -21,6 +21,9 @@ get_xml_tag_value(){
   value=${value#" "}
   echo $value
 }
+
+
+SECONDS=0
 
 PCAP_FILE=$1
 USE_IDS=$2 
@@ -107,10 +110,6 @@ mount -t tmpfs -o size=20m  tmpfs $RAMFSDIR
 show_progress_text "Disabling active Name resolution for PCAP imports "
 /usr/local/bin/trisulctl_hub "set config $context_name@hub0  DBTasks>ResolveIP>Enable=false"
 
-show_progress_text "Changing analysis Queue capacity to 10000 for PCAP import"
-/usr/local/bin/trisulctl_hub "set config $context_name@probe0  Tuning>AnalysisQueueCapacity=10000"
-
-
 show_progress_text "Creating overlay layer for new context and restarting hub"
 /usr/local/bin/trisulctl_hub "set config $context_name  addlayer=overlay"
 /usr/local/bin/trisulctl_hub "restart context $context_name@hub0" 
@@ -145,7 +144,17 @@ if  [ "$USE_IDS" == "suricata" ]; then
 	IFS='.'; user=($user); unset IFS;
 	user="${user[0]}" 
 
-	/usr/bin/suricata -c $suricata_conf_file --user $user -l $logdir -r $PCAP_FILE
+	if [ -f $PCAP_FILE ]; then 
+		/usr/bin/suricata -c $suricata_conf_file --user $user -l $logdir -r $PCAP_FILE
+	else
+		echo "Processing directory of PCAP $PCAP_FILE "
+		for pf in $PCAP_FILE/*
+		do 
+			echo "Suricata over $pf"  
+			/usr/bin/suricata -c $suricata_conf_file --user $user -l $logdir -r $pf
+		done
+	fi
+
 
 	# sending stop cmd
 	/usr/local/bin/trisulctl_probe start context $context_name@probe0  tool=pipeeof 
@@ -159,11 +168,14 @@ fi
 show_progress_text "Restarting Webtrisul " 
 /usr/local/share/webtrisul/build/webtrisuld start 
 
-echo " Done"
+echo 
+echo "Finished elapsed : $SECONDS seconds"
+echo 
 
 echo 
-echo ==== SUCCESSFULLY IMPORTED FROM PCAP FILE $PCAP_FILE           =====
-echo ==== LOGIN to the Web Trisul interface http://ip-address:3000  =====
-echo ==== Then select $context_name on the Login Screen             =====
+echo ==== SUCCESSFULLY IMPORTED FROM PCAP REPO $PCAP_FILE           =====
+echo ==== TO VIEW DASHBOARDS                                        =====
+echo ==== 1. login to the Web Trisul interface                      =====
+echo ==== 2. select $context_name on the Login Screen               =====
 echo 
 

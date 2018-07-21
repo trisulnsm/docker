@@ -22,6 +22,7 @@ RUN apt-get update  &&  apt-get install -y  \
 		libpcap0.8 \
 		binutils  \
 		nano  \
+		vim \
 		librsvg2-bin \
 		libleveldb1v5 \
 		snmp \
