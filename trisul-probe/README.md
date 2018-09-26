@@ -50,14 +50,14 @@ Use the `--probe-id` argument to use the correct probe certificate
 docker run --name=probe1a --net=host \
       -v /home/unpl/probeEAST11data:/trisulroot \
 	      -d trisulnsm/trisul-probe   \
-		      --probe-id probeEAST11
+		      --probe-id probeEAST11 \
 				   --interface wlp4s0 
 ````
 
 
 ## More steps
 
-Now you have a full fledged Trisul Probe. Some things you can do 
+Your new probe should now be online and connected to the distributed domain.
 
 
 ````
