@@ -1,0 +1,1 @@
+0 0 * * * oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
