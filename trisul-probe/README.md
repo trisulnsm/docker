@@ -3,6 +3,9 @@ Docker : trisul-probe
 
 trisul-probe builds the Docker image for a Trisul Probe node 
 
+```
+docker pull trisulnsm/trisul-probe 
+```
 
 ## Bringing a new Trisul-Probe online 
 
