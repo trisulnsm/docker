@@ -12,7 +12,7 @@ The following steps connect the new probe to a Trisul distributed monitoring dom
 
 The domain admin will assign a name to the new probe like `probeEAST1`. This is  shown as `..XYZ` in the listings below 
 
-The following certificates and keys will be given to you by the admin. See [For Hub Administrators](#for_administrators) 
+The following certificates and keys will be given to you by the admin. See [For Hub Administrators](#for-hub-administrators) 
 
   1. `domain0.cert`  - the domain certificate (public key) file 
   2. `probeXYZ.cert` - the probe certificate (public key) file
@@ -95,9 +95,11 @@ When you get a request for a new probe, you need to provide the following three 
 2. probe certificate containing the new ProbeName  
 3. probe private key 
 
-### 1. Select Unique name for the new probe 
+### 1. Select a unique name for the new probe 
 
-Assign a unique name to the new probe in the context. Say `probeEAST11`.To select a unique probe name, use `trisulctl_hub info context default` to see all existing probes
+Assign a unique and meaningful name to the new probe. 
+
+To select a unique probe name, use `trisulctl_hub info context default` to see all existing probes
 
 ### 2. Create a probe cert + key
 
