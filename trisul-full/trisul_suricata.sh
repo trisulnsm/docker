@@ -6,7 +6,7 @@
 # Prepare context name
 
 pcount=0
-TOTAL_STEPS=12
+TOTAL_STEPS=11
 show_progress_text(){
   pcount=$((pcount+1))
   echo -e "\e[32m"
@@ -71,9 +71,6 @@ fi
 
 
 config_file="/usr/local/etc/trisul-probe/domain0/probe0/context_$context_name/trisulProbeConfig.xml"
-
-show_progress_text "Stopping webtrisul to conserve memory" 
-/usr/local/share/webtrisul/build/webtrisuld stop
 
 show_progress_text "Creating new context $context_name"
 
@@ -166,7 +163,7 @@ fi
 /usr/local/bin/trisulctl_hub restart context $context_name@hub0  
 
 show_progress_text "Restarting Webtrisul " 
-/usr/local/share/webtrisul/build/webtrisuld start 
+/usr/local/share/webtrisul/build/webtrisuld restart 
 
 echo 
 echo "Finished elapsed : $SECONDS seconds"
