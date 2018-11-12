@@ -71,18 +71,21 @@ In the above command, notice that you mapped the volume using `-v` of the host d
 **Thats it !**  Logon on `https://localhost:3000` and you can dive right in. See [Trisul Docs : Basic Usage](https://www.trisul.org/docs/ug/basicusage/index.html) to get started. 
 
 
-### 4. Run a two-pass Trisul + Suricata  over a PCAP dump 
+### 4. Process a PCAP dump 
 
-Trisul has a multi layered analytics capability. A first pass analysis with Trisul is done over a PCAP dump, then a second layer is created and another pass with Suricata IDS.  This gives you full visibility with multiple tools.
+Trisul has a multi layered analytics capability. A first pass analysis with Trisul is done over a PCAP dump, then a second layer is created and another pass with Suricata IDS.  This gives you full NSM visibility of both traffic and signature based alerts .
 
 ````
-sudo docker run  --name=trisul1a \
+sudo docker run --privileged=true  --name=trisul1a \
    --net=host -v /opt/trisul6_root:/trisulroot \
        -d trisulnsm/trisul6 --pcap myPacketDump.pcap
 
 ````
 
-**PCAP File Location** The file `myPacketDump.pcap` has to be placed inside the shared volume `/opt/trisul6_root` volume so that the Docker image can see the outside file.
+#### Notes on offline 
+
+1. **PCAP File Location** The file `myPacketDump.pcap` has to be placed inside the shared volume `/opt/trisul6_root` volume so that the Docker image can see the outside file.
+2. **privileged==true** This option is required because the Trisul File Extraction feature requires root to create a RAMFS partition inside the docker container  
 
 ---------------------
 

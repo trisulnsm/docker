@@ -49,7 +49,7 @@ file_name=$(echo $file_name | tr -dc '[:alnum:]\n\r'| tr '[:upper:]' '[:lower:]'
 
 
 if [ ${USECONTEXTNAME} == "assign" ]; then 
-	wc_count=$(find /usr/local/etc/trisul-hub/domain0/hub0/context_*  -type d  | wc -l)
+	wc_count=$(find /usr/local/etc/trisul-hub/domain0/hub0/context_*  -type d 2> /dev/null  | wc -l)
 	wc_count=$((wc_count+1)) 
 	if (( ${#file_name} > 10 )) ; then 
 		echo "!++ Warning : Pcapfilename top big for context, truncating"
