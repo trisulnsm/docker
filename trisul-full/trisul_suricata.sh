@@ -152,15 +152,12 @@ if  [ "$USE_IDS" == "suricata" ]; then
 		done
 	fi
 
-
 	# sending stop cmd
 	/usr/local/bin/trisulctl_probe start context $context_name@probe0  tool=pipeeof 
-
 fi 
 
-
 # restarting hub : was issue with counter group info 
-/usr/local/bin/trisulctl_hub restart context $context_name@hub0  
+# /usr/local/bin/trisulctl_hub restart context $context_name@hub0 
 
 show_progress_text "Restarting Webtrisul " 
 /usr/local/share/webtrisul/build/webtrisuld restart 
