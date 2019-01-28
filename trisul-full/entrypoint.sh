@@ -113,7 +113,8 @@ else
 	ln -sf /trisulroot/webtrisul_public_plugins_init  /usr/local/share/webtrisul/public/plugins
 	echo ++ Installing default Trisul APP dashboards 
 	tar xf /root/dash.tar.gz -C  /usr/local/share/webtrisul/public/plugins 
-	chown trisul.trisul /usr/local/share/webtrisul/public/plugins -R 
+	echo ++ Changing perms of public plugins 
+	chown trisul.trisul /trisulroot/webtrisul_public_plugins_init -R
 	echo ++ Installing default Trisul LUA analytics  
 	tar xf /root/luaplugs.tar.gz -C  /usr/local/var/lib/trisul-config/domain0/context0/profile0/lua
 	echo ++ Installing default WEBTRISULDB
