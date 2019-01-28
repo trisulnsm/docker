@@ -48,29 +48,21 @@ Running.
 Please see instructions for installing [Docker CE on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04) You can find official instructions for installing Docker on a number of platforms on the official [Install Docker site](https://docs.docker.com/engine/installation/)
 
 
-### 2. Create data directory on host 
+### 2. Run TrisulNSM  on a capture interface 
 
-Create a directory on the host system where the data and config will be stored. This is a one time job.
-
-````
-sudo mkdir /opt/trisul6_root
-````
-
-### 3. Run TrisulNSM  on a capture interface 
-
-Now you are ready to run TrisulNSM.  Say you want to capture traffic from the port `enp5s0`, just type 
+Now you are ready to run TrisulNSM.  Say you want to capture traffic from the port `enp5s0` and store the results in `/opt/trisul6_root`  just type 
 
 ````
 sudo docker run  --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 --interface enp5s0 
 ````
 
-In the above command, notice that you mapped the volume using `-v` of the host directory `/opt/trisul6_root` you created in step 1.  That is where all the persistent data is kept. 
+In the above command, notice that you mapped the volume using `-v` of the host directory `/opt/trisul6_root`.  That is where all the persistent data is kept. 
 
 
 **Thats it !**  Logon on `https://localhost:3000` and you can dive right in. See [Trisul Docs : Basic Usage](https://www.trisul.org/docs/ug/basicusage/index.html) to get started. 
 
 
-### 4. Process a PCAP dump 
+## Process a PCAP dump 
 
 Trisul has a multi layered analytics capability. A first pass analysis with Trisul is done over a PCAP dump, then a second layer is created and another pass with Suricata IDS.  This gives you full NSM visibility of both traffic and signature based alerts .
 
