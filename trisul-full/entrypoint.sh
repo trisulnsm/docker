@@ -13,6 +13,7 @@ NO_SURICATA=
 ENABLE_FILE_EXTRACTION=
 FINE_RESOLUTION="coarse"
 USECONTEXTNAME="assign"
+NETFLOW_MODE=
 while true; do
   case "$1" in
 	-i | --interface )  		START_INTERFACE="$2"; shift 2 ;;
@@ -24,6 +25,7 @@ while true; do
 	--fine-resolution)  		FINE_RESOLUTION="fine"; shift 1;; 
 	--context-name)             USECONTEXTNAME="$2"; shift 2;;  
 	--enable-file-extraction)   ENABLE_FILE_EXTRACTION="1"; shift 1;; 
+	--netflow-mode)   			NETFLOW_MODE="1"; shift 1;; 
     -- ) shift; break ;;
 	* ) if [ ! -z "$1" ]; then 
 			echo "Unknown option [$1]"; 
@@ -233,6 +235,11 @@ mkdir -p $RAMFSDIR
 mount -t tmpfs -o size=20m  tmpfs $RAMFSDIR
 fi 
 
+# if running in NETFLOW mode  option --netflow-mode
+if [ ! -z "$NETFLOW_MODE" ]; then
+echo "Switching to Netflow mode NETFLOW_TAP" 
+/usr/local/bin/trisulctl_hub "set config default@probe0  App>TrisulMode=NETFLOW_TAP"
+fi 
 
 echo Starting Webtrisul
 /usr/local/share/webtrisul/build/webtrisuld start 
