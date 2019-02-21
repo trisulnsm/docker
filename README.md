@@ -3,9 +3,17 @@ Trisul Network Analytics : Network Security Monitoring in a Docker
 
 A full blown Network Security and Traffic Monitoring (NSM) solution you can deploy in 1 minute.
 
-> New Feb 21 2018:  *NEW*  New Geo IP metering.  City and Subnets and support for new Maxmind GeoLite2 and GeoIP databases.  Do buy a subscription from [Maxmind](https://www.maxmind.com/en/home)  for maximum accuracy. 
-> Jan 22 2018:  Trisul NSM docker images includes Cross-Drill allows you to track information flows
-> Oct 12 2018: [trisul-probe](https://github.com/trisulnsm/docker/blob/master/trisul-probe/README.md)  docker image containing only the probe components. Use this to roll out probes, connecting to a Trisul-Hub node.  
+### Whats new?
+
+| Date | Remarks |
+| ---- | ------- |
+| Feb-21-2019 |  *NEW*  New Geo IP metering.  City and Subnets and support for new Maxmind GeoLite2 and GeoIP databases.  Do buy a subscription from [Maxmind](https://www.maxmind.com/en/home)  for maximum accuracy.|
+| Feb-01-2019 |  *NEW*  Added `--netflow-mode` [option to start](#3-start-a-netflow-analytics-instance)  Netflow v5/v9/v10/IPFIX/SFlow analytics  |
+| Jan-22-2019 |   Trisul NSM docker images includes Cross-Drill allows you to track information flows |
+| Oct-12-2018 | [trisul-probe](https://github.com/trisulnsm/docker/blob/master/trisul-probe/README.md)  docker image containing only the probe components. Use this to roll out probes, connecting to a Trisul-Hub node.  |
+| Mar-02-2018 |  `--enable-file-extraction` option |
+| Feb_22_2018 |   Added tshark and snmp. With tshark "Quick PCAP" view will give you a one line summary per packet, without you having to download the full PCAP. SNMP tools can add interface or any other metrics using the SNMP Lua Script and to resolve Netflow interfaces and router names. |
+
 
 Other links
 -----------
@@ -40,12 +48,12 @@ Cast
 Running.
 ---------
 
-### 1. Install the free Docker if you havent already done so
+## Pre-requisite  Install Docker if you havent already done so
 
 Please see instructions for installing [Docker CE on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04) You can find official instructions for installing Docker on a number of platforms on the official [Install Docker site](https://docs.docker.com/engine/installation/)
 
 
-### 2. Run TrisulNSM  on a capture interface 
+## 1. Run TrisulNSM  on a capture interface 
 
 Now you are ready to run TrisulNSM.  Say you want to capture traffic from the port `enp5s0` and store the results in `/opt/trisul6_root`  just type 
 
@@ -59,7 +67,7 @@ In the above command, notice that you mapped the volume using `-v` of the host d
 **Thats it !**  Logon on `https://localhost:3000` and you can dive right in. See [Trisul Docs : Basic Usage](https://www.trisul.org/docs/ug/basicusage/index.html) to get started. 
 
 
-## Process a PCAP dump 
+## 2. Process a PCAP dump 
 
 Trisul has a multi layered analytics capability. A first pass analysis with Trisul is done over a PCAP dump, then a second layer is created and another pass with Suricata IDS.  This gives you full NSM visibility of both traffic and signature based alerts .
 
@@ -74,6 +82,20 @@ sudo docker run --privileged=true  --name=trisul1a \
 
 1. **PCAP File Location** The file `myPacketDump.pcap` has to be placed inside the shared volume `/opt/trisul6_root` volume so that the Docker image can see the outside file.
 2. **privileged==true** This option is required because the Trisul File Extraction feature requires root to create a RAMFS partition inside the docker container  
+
+## 3. Start a Netflow Analytics instance 
+
+With just a single line you can start a TrisulNSM Docker instance to process Netflow v5/v9/IPFIX/SFlow  using the `--netflow-mode` parameter 
+
+
+````
+sudo docker run  --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 --interface enp5s0 
+````
+
+In the above command, notice that you mapped the volume using `-v` of the host directory `/opt/trisul6_root`.  That is where all the persistent data is kept. 
+
+
+**Thats it !**  Logon on `https://localhost:3000` and you can dive right in. See [Trisul Docs : Basic Usage](https://www.trisul.org/docs/ug/basicusage/index.html) to get started. 
 
 ---------------------
 
@@ -135,6 +157,7 @@ Options
 7. `--fine-resolution`: All metrics are tracked with a 1 second resolution. Use for small PCAP files 
 8. `--enable-file-extraction` : Enables file extraction feature for the "Save Binaries App". This option creates a TMPFS filesystem, hence to use this option please also use the `--privileged=true` docker option. 
 9. `--context-name <context name>` : You may want to use this option with PCAP import, specifiy a context name instead of trying to compute one from the PCAP filename. 
+9. `--netflow-mode` : Start the docker instance in NETFLOW mode. This processes all Netflow packets on the network interface specified with `--interface` option 
 
 Trust Error
 -----
