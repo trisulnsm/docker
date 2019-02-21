@@ -15,7 +15,7 @@ The following steps connect the new probe to a Trisul distributed monitoring dom
 
 The domain admin will assign a name to the new probe like `probeEAST1`. This is  shown as `..XYZ` in the listings below 
 
-The following certificates and keys will be given to you by the admin. See [For Hub Administrators](#for-hub-administrators) 
+The following certificates and keys will be given to you by the admin. See [For Hub Administrators](#for-hub-administrators) for instructions on generating these three files. 
 
   1. `domain0.cert`  - the domain certificate (public key) file 
   2. `probeXYZ.cert` - the probe certificate (public key) file
@@ -130,6 +130,25 @@ Only when you perform this step can the new probe connect to your domain.
 trisulctl_hub install probe probeXYZ.cert 
 trisulctl_hub set config default@hub0 addlayer=probeXYZ 
 ````
+
+### Is this your very first probe ?
+
+If this is the first probe you are adding you need to do two things first.
+
+1. change the domain to a distributed domain. For this you need to create a new domain certificate+key. When prompted, enter `domain0` then 2 ports to use for the distributed domain. then `install` th3e new
+2. change the Hub node from using the local default IPC to TCP Sockets.  Use the command change_endpoints
+
+````
+sudo /usr/local/share/trisul-hub/create domain
+
+sudo /usr/local/share/trisul-hub/install domain
+
+sudo /usr/local/share/trisul-hub/change_endpoints
+
+````
+
+Select a Port Range for the Hub Node and then restart the Hub `sudo trisulctl_hub restart domain` 
+
 
 For more details see Trisul Documentation , [Step 5 and Step 6 in Deploy a new probe](https://www.trisul.org/docs/ug/domain/deploy_probe.html) 
 
