@@ -3,12 +3,9 @@ Trisul Network Analytics : Network Security Monitoring in a Docker
 
 A full blown Network Security and Traffic Monitoring (NSM) solution you can deploy in 1 minute.
 
-> New Jan 22 2018:  *NEW*  Trisul NSM docker images includes Cross-Drill allows you to track information flows. 
-
+> New Feb 21 2018:  *NEW*  New Geo IP metering.  City and Subnets and support for new Maxmind GeoLite2 and GeoIP databases.  Do buy a subscription from [Maxmind](https://www.maxmind.com/en/home)  for maximum accuracy. 
+> Jan 22 2018:  Trisul NSM docker images includes Cross-Drill allows you to track information flows
 > Oct 12 2018: [trisul-probe](https://github.com/trisulnsm/docker/blob/master/trisul-probe/README.md)  docker image containing only the probe components. Use this to roll out probes, connecting to a Trisul-Hub node.  
-> Mar 02 2018: --enable-file-extraction flag 
-> Feb 22 2018:  Added tshark and snmp. With tshark "Quick PCAP" view will give you a one line summary per packet, without you having to download the full PCAP. SNMP tools can add interface or any other metrics using the SNMP Lua Script and to resolve Netflow interfaces and router names. 
-
 
 Other links
 -----------
