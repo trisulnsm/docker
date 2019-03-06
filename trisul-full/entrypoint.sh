@@ -32,14 +32,43 @@ while true; do
   esac
 done
 
+if [ ! -z "$USECONTEXTNAME" ]; then
+    echo -e "\e[32m"
+    echo  Option [--context-name]      Context name set to $USECONTEXTNAME
+    echo -e "\e[0m"
+fi
+
+if [ ! -z "$FINE_RESOLUTION" ]; then
+    echo -e "\e[32m"
+    echo  Option [--fine-resolution]   Fine metrics resolution  $FINE_RESOLUTION
+    echo -e "\e[0m"
+fi
+
+if [ ! -z "$ENABLE_FILE_EXTRACTION" ]; then
+    echo -e "\e[32m"
+    echo  Option [--enable-file-extraction] Enable file extraction , create ramfs $ENABLE_FILE_EXTRACTION
+    echo -e "\e[0m"
+fi
+
+if [ ! -z "$NETFLOW_MODE" ]; then
+    echo -e "\e[32m"
+    echo  Option [--netflow-mode]      Netflow mode $NETFLOW_MODE
+    echo -e "\e[0m"
+fi
+
 if [ ! -z "$START_INTERFACE" ]; then
-    echo  INTF Start interface set $START_INTERFACE
-    echo  INTF Using ETHTOOL to disable gso gro tso on $START_INTERFACE
+    echo -e "\e[32m"
+    echo  Option [--interface]         Start interface set $START_INTERFACE
+    echo -e "\e[0m"
+
+    echo  "Using ETHTOOL disabling gso gro tso on $START_INTERFACE"
     ethtool -K $START_INTERFACE  tso off gso off gro off
 fi
 
 if [ ! -z "$CAPTURE_FILE" ]; then
-    echo "PCAP Capture file set to  $CAPTURE_FILE"
+    echo -e "\e[32m"
+    echo  Option [--pcap]              PCAP Capture file set to  $CAPTURE_FILE
+    echo -e "\e[0m"
 
     if [ ! -e  $CAPTURE_FILE ]; then 
         echo "Cannot find PCAP file $CAPTURE_FILE. "
@@ -49,12 +78,17 @@ fi
 
 
 if [ ! -z "$NO_SURICATA" ]; then
-    echo "NOIDS --no-ids : We wont be running IDS over this PCAP file $CAPTURE_FILE"
+    echo -e "\e[32m"
+    echo  Option [--no-ids]            We wont be running IDS over this PCAP file $CAPTURE_FILE
+    echo -e "\e[0m"
 fi
 
 # Timezone will be UTC unless explicitly overridden 
 if [ ! -z "$TIMEZONE" ]; then
-    echo "TIMEZONE -- setting timezone to $TIMEZONE"
+    echo -e "\e[32m"
+    echo  Option [--timezone]          Setting timezone to $TIMEZONE
+    echo -e "\e[0m"
+
     if [ ! -e  /usr/share/zoneinfo/$TIMEZONE ]; then 
         echo "Invalid timezone specified $TIMEZONE,  defaulting to UTC" 
         echo "TIMEZONE -- defaulting  to Etc/UTC" 
@@ -69,13 +103,18 @@ fi
 
 # Fix the webserver port 
 if [ ! -z "$WEBSERVER_PORT" ]; then
-    echo NGINX Web server port changed to : $WEBSERVER_PORT
+    echo -e "\e[32m"
+    echo  Option [--webserver-port]    Web server port changed to : $WEBSERVER_PORT
+    echo -e "\e[0m"
     sed -i -E "s/listen.*;/listen $WEBSERVER_PORT;/" /usr/local/share/webtrisul/build/nginx.conf
     /usr/local/bin/shell  /usr/local/var_init/lib/trisul-config/domain0/webtrisul/WEBTRISULDB.SQDB "update webtrisul_options set value='$WEBSERVER_PORT' where name = 'webtrisul_port';"
 fi
 
 if [ ! -z "$WEBSOCKETS_PORT" ]; then
-    echo THIN Web sockets changed to $WEBSOCKETS_PORT
+    echo -e "\e[32m"
+    echo  Option [--websockets-port]   Web sockets changed to $WEBSOCKETS_PORT
+    echo -e "\e[0m"
+
     sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/build/thin-nginxd
     sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/build/thin-nginxssld
     sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/config/initializers/oem_settings.rb 
@@ -268,10 +307,10 @@ fi
 if [ ! -z "$CAPTURE_FILE" ]; then
     if [ ! -z "$NO_SURICATA" ]; then
         echo "Importing from capture file $CAPTURE_FILE into new context. No IDS  "
-        /root/trisul_suricata.sh  $CAPTURE_FILE no_ids  $FINE_RESOLUTION $USECONTEXTNAME
+        /root/trisul_suricata.sh  $CAPTURE_FILE no_ids  $FINE_RESOLUTION $USECONTEXTNAME $ENABLE_FILE_EXTRACTION
     else
         echo "Importing from capture file $CAPTURE_FILE into new context. Will also index with Suricata "
-        /root/trisul_suricata.sh  $CAPTURE_FILE suricata  $FINE_RESOLUTION $USECONTEXTNAME
+        /root/trisul_suricata.sh  $CAPTURE_FILE suricata  $FINE_RESOLUTION $USECONTEXTNAME $ENABLE_FILE_EXTRACTION
     fi
 fi 
 

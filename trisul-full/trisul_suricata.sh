@@ -29,6 +29,7 @@ PCAP_FILE=$1
 USE_IDS=$2 
 FINE_RESOLUTION=$3 
 USECONTEXTNAME=$4
+ENABLE_FILE_EXTRACTION=$5
 
 if ! test -e $PCAP_FILE; then
   echo "PCAP file does not exist : $PCAP_FILE"
@@ -97,10 +98,14 @@ fi
 
 
 show_progress_text "Creating RAMFS for file extraction "
+if [ ! -z "$ENABLE_FILE_EXTRACTION" ]; then
 /usr/local/bin/trisulctl_probe "set config $context_name@probe0  Reassembly>FileExtraction>Enabled=true"
 RAMFSDIR=/usr/local/var/lib/trisul-probe/domain0/probe0/context_$context_name/run/ramfs
 mkdir $RAMFSDIR
 mount -t tmpfs -o size=20m  tmpfs $RAMFSDIR
+else
+	echo "    File Extraction disabled, we arent going to create the RAMFS partition"
+fi 
 
 
 
@@ -115,8 +120,10 @@ show_progress_text "Running trisul in offline mode over the PCAP repository (cou
 
 /usr/local/bin/trisul -nodemon /usr/local/etc/trisul-probe/domain0/probe0/context_$context_name/trisulProbeConfig.xml -mode offline -in $PCAP_FILE
 
+if [ ! -z "$ENABLE_FILE_EXTRACTION" ]; then
 echo "    Unmounting RAMFS "
 umount $RAMFSDIR
+fi 
 
 
 if  [ "$USE_IDS" == "suricata" ]; then 
