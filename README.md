@@ -87,7 +87,6 @@ sudo docker run --privileged=true  --name=trisul1a \
 
 With just a single line you can start a TrisulNSM Docker instance to process Netflow v5/v9/IPFIX/SFlow  using the `--netflow-mode` parameter 
 
-
 ````
 sudo docker run  --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 --interface enp5s0 
 ````
@@ -102,17 +101,16 @@ In the above command, notice that you mapped the volume using `-v` of the host d
 Additional tasks
 ================
 
-Here are some tips for common use cases 
 
+### Start TrisulNSM  bare bones for configuration
 
-### Start TrisulNSM  docker without capturing
-
-You can run the TrisulNSM docker , then log on the web interface setup the capture adapters, Netflow mode, or other options manually. To do that just skip the `--interface ` option
+Use this command to start the docker instance to configure the applications, install Trisul Apps, using the web interface.
 
 ````
-sudo docker run --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 
+sudo docker run --name=test1  -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 
 ````
 
+After configuring  Trisul.  You can stop the container `docker stop test1` and `docker rm test1` Then start a live capture or import a pcap file. 
 
 ### Use different webserver ports 
 
