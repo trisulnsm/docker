@@ -86,8 +86,8 @@ if [ ! -z "$CAPTURE_FILE" ]; then
     #  check if pcap input file is readable by trisul user 
     if ! sudo -u trisul ./isfilereadable.sh $CAPTURE_FILE ; then 
 	echo -en "\e[31m"
-        echo "Cannot find PCAP file $CAPTURE_FILE. "
-        echo "You need to place the pcap file inside the shared docker volume as specified in -v "
+        echo "Cannot READ the pcap file/directory  $CAPTURE_FILE. user=trisul"
+        echo "Ensure the pcap file/directory is readable by user trisul, use chmod +rR $CAPTURE_FILE" 
         echo -en "\e[0m"
 	exit 2
     fi 
