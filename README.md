@@ -69,16 +69,20 @@ In the above command, notice that you mapped the volume using `-v` of the host d
 
 ## 2. Process a PCAP dump 
 
-Trisul has a multi layered analytics capability. A first pass analysis with Trisul is done over a PCAP dump, then a second layer is created and another pass with Suricata IDS.  This gives you full NSM visibility of both traffic and signature based alerts .
+Trisul does a two-pass analysis over PCAP dumps. The First pass builds statistics, flows, packets, and resources.  Then a second pass with Suricata IDS overlays the IDS alerts.  This gives you full NSM visibility of both traffic and signature based alerts .
+
+
+The following command processes the `myPacketDump.pcap` file located in the `trisulroot` 
 
 ````
 sudo docker run --privileged=true  --name=trisul1a \
    --net=host -v /opt/trisul6_root:/trisulroot \
        -d trisulnsm/trisul6 --pcap myPacketDump.pcap
 
+
 ````
 
-#### Notes on offline 
+#### Notes on offline pcap 
 
 1. **PCAP File Location** The file `myPacketDump.pcap` has to be placed inside the shared volume `/opt/trisul6_root` volume so that the Docker image can see the outside file.
 2. **privileged==true** This option is required because the Trisul File Extraction feature requires root to create a RAMFS partition inside the docker container  
@@ -102,12 +106,12 @@ Additional tasks
 ================
 
 
-### Start TrisulNSM  bare bones for configuration
+### 4. Start TrisulNSM  User Interface Only 
 
-Use this command to start the docker instance to configure the applications, install Trisul Apps, using the web interface.
+Start the docker user interface only. Use to configure the applications, install Trisul Apps, using the web interface.
 
 ````
-sudo docker run --name=test1  -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 
+sudo docker run  --net=host  --name=test1  -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 
 ````
 
 After configuring  Trisul.  You can stop the container `docker stop test1` and `docker rm test1` Then start a live capture or import a pcap file. 
