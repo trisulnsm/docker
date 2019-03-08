@@ -74,9 +74,22 @@ if [ ! -z "$CAPTURE_FILE" ]; then
     echo  Option [--pcap]              PCAP Capture file set to  $CAPTURE_FILE
     echo -en "\e[0m"
 
+    #  check if pcap input file exists 
     if [ ! -e  $CAPTURE_FILE ]; then 
+	echo -en "\e[31m"
         echo "Cannot find PCAP file $CAPTURE_FILE. "
         echo "You need to place the pcap file inside the shared docker volume as specified in -v "
+        echo -en "\e[0m"
+	exit 1
+    fi 
+
+    #  check if pcap input file is readable by trisul user 
+    if ! sudo -u trisul ./isfilereadable.sh $CAPTURE_FILE ; then 
+	echo -en "\e[31m"
+        echo "Cannot find PCAP file $CAPTURE_FILE. "
+        echo "You need to place the pcap file inside the shared docker volume as specified in -v "
+        echo -en "\e[0m"
+	exit 2
     fi 
 fi
 

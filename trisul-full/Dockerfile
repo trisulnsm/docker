@@ -27,7 +27,8 @@ RUN apt-get update  &&  apt-get install -y  \
 		libleveldb1v5 \
 		snmp \
 		bsdmainutils \
-		suricata  
+		suricata  \
+                sudo 
 
 # Tshark alone in non-interactive
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tshark \
@@ -47,6 +48,7 @@ COPY oink.cron \
 	 dash.tar.gz \
 	 WEBTRISUL_DEFAULT.SQDB \
 	 trisul_suricata.sh \
+	 isfilereadable.sh \
 	 /root/ 
 
 # Layer moves initial var and etc out of the way 
