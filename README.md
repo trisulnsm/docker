@@ -155,7 +155,9 @@ Options
 7. `--fine-resolution`: All metrics are tracked with a 1 second resolution. Use for small PCAP files 
 8. `--enable-file-extraction` : Enables file extraction feature for the "Save Binaries App". This option creates a TMPFS filesystem, hence to use this option please also use the `--privileged=true` docker option. 
 9. `--context-name <context name>` : You may want to use this option with PCAP import, specifiy a context name instead of trying to compute one from the PCAP filename. 
-9. `--netflow-mode` : Start the docker instance in NETFLOW mode. This processes all Netflow packets on the network interface specified with `--interface` option 
+10. `--netflow-mode` : Start the docker instance in NETFLOW mode. This processes all Netflow packets on the network interface specified with `--interface` option 
+11. `--no-pcap-store` : Do not store raw packets, use this for analyzing certain types of PCAP dumps
+12. `--init-db` : Use this to create a blank initialized database on the first run.
 
 Trust Error
 -----

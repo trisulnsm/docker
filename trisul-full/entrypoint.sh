@@ -12,6 +12,8 @@ ENABLE_FILE_EXTRACTION=
 FINE_RESOLUTION="coarse"
 USECONTEXTNAME="assign"
 NETFLOW_MODE=
+NO_PCAP_STORE=
+INIT_DATABASE=
 while true; do
   case "$1" in
     -i | --interface )          START_INTERFACE="$2"; shift 2 ;;
@@ -24,6 +26,8 @@ while true; do
     --context-name)             USECONTEXTNAME="$2"; shift 2;;  
     --enable-file-extraction)   ENABLE_FILE_EXTRACTION="1"; shift 1;; 
     --netflow-mode)             NETFLOW_MODE="1"; shift 1;; 
+    --no-pcap-store)            NO_PCAP_STORE="1"; shift 1;; 
+    --init-db)                  INIT_DATABASE="1"; shift 1;; 
     -- ) shift; break ;;
     * ) if [ ! -z "$1" ]; then 
             echo "Unknown option [$1]"; 
@@ -33,42 +37,42 @@ while true; do
 done
 
 if [ ! -z "$USECONTEXTNAME" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--context-name]      Context name set to $USECONTEXTNAME
-    echo -e "\e[0m"
+    echo -en "\e[0m"
 fi
 
 if [ ! -z "$FINE_RESOLUTION" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--fine-resolution]   Fine metrics resolution  $FINE_RESOLUTION
-    echo -e "\e[0m"
+    echo -en "\e[0m"
 fi
 
 if [ ! -z "$ENABLE_FILE_EXTRACTION" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--enable-file-extraction] Enable file extraction , create ramfs $ENABLE_FILE_EXTRACTION
-    echo -e "\e[0m"
+    echo -en "\e[0m"
 fi
 
 if [ ! -z "$NETFLOW_MODE" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--netflow-mode]      Netflow mode $NETFLOW_MODE
-    echo -e "\e[0m"
+    echo -en "\e[0m"
 fi
 
 if [ ! -z "$START_INTERFACE" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--interface]         Start interface set $START_INTERFACE
-    echo -e "\e[0m"
+    echo -en "\e[0m"
 
     echo  "Using ETHTOOL disabling gso gro tso on $START_INTERFACE"
     ethtool -K $START_INTERFACE  tso off gso off gro off
 fi
 
 if [ ! -z "$CAPTURE_FILE" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--pcap]              PCAP Capture file set to  $CAPTURE_FILE
-    echo -e "\e[0m"
+    echo -en "\e[0m"
 
     if [ ! -e  $CAPTURE_FILE ]; then 
         echo "Cannot find PCAP file $CAPTURE_FILE. "
@@ -78,16 +82,22 @@ fi
 
 
 if [ ! -z "$NO_SURICATA" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--no-ids]            We wont be running IDS over this PCAP file $CAPTURE_FILE
-    echo -e "\e[0m"
+    echo -en "\e[0m"
+fi
+
+if [ ! -z "$NO_PCAP_STORE" ]; then
+    echo -en "\e[32m"
+    echo  Option [--no-pcap-store]     Disabling packet storage in ring 
+    echo -en "\e[0m"
 fi
 
 # Timezone will be UTC unless explicitly overridden 
 if [ ! -z "$TIMEZONE" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--timezone]          Setting timezone to $TIMEZONE
-    echo -e "\e[0m"
+    echo -en "\e[0m"
 
     if [ ! -e  /usr/share/zoneinfo/$TIMEZONE ]; then 
         echo "Invalid timezone specified $TIMEZONE,  defaulting to UTC" 
@@ -103,17 +113,17 @@ fi
 
 # Fix the webserver port 
 if [ ! -z "$WEBSERVER_PORT" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--webserver-port]    Web server port changed to : $WEBSERVER_PORT
-    echo -e "\e[0m"
+    echo -en "\e[0m"
     sed -i -E "s/listen.*;/listen $WEBSERVER_PORT;/" /usr/local/share/webtrisul/build/nginx.conf
     /usr/local/bin/shell  /usr/local/var_init/lib/trisul-config/domain0/webtrisul/WEBTRISULDB.SQDB "update webtrisul_options set value='$WEBSERVER_PORT' where name = 'webtrisul_port';"
 fi
 
 if [ ! -z "$WEBSOCKETS_PORT" ]; then
-    echo -e "\e[32m"
+    echo -en "\e[32m"
     echo  Option [--websockets-port]   Web sockets changed to $WEBSOCKETS_PORT
-    echo -e "\e[0m"
+    echo -en "\e[0m"
 
     sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/build/thin-nginxd
     sed -i -E "s/3003/$WEBSOCKETS_PORT/" /usr/local/share/webtrisul/build/thin-nginxssld
@@ -278,6 +288,35 @@ echo "Switching to Netflow mode NETFLOW_TAP"
 /usr/local/bin/trisulctl_hub "set config default@probe0  App>TrisulMode=NETFLOW_TAP"
 fi 
 
+# if user does not want to store packets 
+if [ ! -z "$NO_PCAP_STORE" ]; then
+echo "Disabling Ring"
+/usr/local/bin/trisulctl_hub "set config default@probe0  Ring>Enabled=FALSE"
+fi 
+
+
+# check for init-db if : /usr/local/var/lib/trisul-hub/domain0/hub0/context0/meters
+# only if empty database 
+if [ ! -z "$INIT_DATABASE" ]; then
+
+	if [ -d "/usr/local/var/lib/trisul-hub/domain0/hub0/context0/meters/oper/0" ]; then 
+		echo -en "\e[31m"
+		echo "-----------------------------------------------------------------"
+		echo "ERROR:  --init-db  can only be done on a first run"
+		echo "ERROR:  There seems to be already some data in the volume"
+		echo "ERROR:  If you want to clean up existing data "
+		echo "ERROR:  Run without --init-db m then login to the instance and do "
+		echo "ERROR:  trisulctl_hub reset context default"
+		echo "-----------------------------------------------------------------"
+		echo -en "\e[0m"
+		exit 
+	else
+		/usr/local/bin/trisulctl_hub "start context default mode=initdb"
+	fi
+fi
+
+
+# all set to start UI 
 echo Starting Webtrisul
 /usr/local/share/webtrisul/build/webtrisuld start 
 
@@ -292,6 +331,8 @@ if [ ! -z "$START_INTERFACE" ]; then
     echo "Automatically starting default context "
     /usr/local/bin/trisulctl_probe start context default 
 fi
+
+
 
 if [ ! -z "$START_INTERFACE" ]; then
     if [ ! -z "$NO_SURICATA" ]; then
