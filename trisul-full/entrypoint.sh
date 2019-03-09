@@ -353,7 +353,8 @@ fi
 if [ ! -z "$CAPTURE_FILE" ]; then
 
     #  check if pcap input file is readable by trisul user 
-    if ! sudo -u trisul /root/isfilereadable.sh $CAPTURE_FILE ; then 
+    cp /root/isfilereadable.sh /tmp
+    if ! sudo -u trisul /tmp/isfilereadable.sh $CAPTURE_FILE ; then 
 	echo -en "\e[31m"
         echo "Cannot READ the pcap file/directory  $CAPTURE_FILE. user=trisul"
         echo "Ensure the pcap file/directory is readable by user trisul, use chmod +rR $CAPTURE_FILE" 
