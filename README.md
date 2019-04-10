@@ -92,7 +92,8 @@ sudo docker run --privileged=true  --name=trisul1a \
 With just a single line you can start a TrisulNSM Docker instance to process Netflow v5/v9/IPFIX/SFlow  using the `--netflow-mode` parameter 
 
 ````
-sudo docker run  --net=host -v /opt/trisul6_root:/trisulroot -d trisulnsm/trisul6 --interface enp5s0 
+sudo docker run  --net=host -v /opt/trisul6_root:/trisulroot \
+        -d trisulnsm/trisul6 --interface enp5s0 --netflow-mode 
 ````
 
 In the above command, notice that you mapped the volume using `-v` of the host directory `/opt/trisul6_root`.  That is where all the persistent data is kept. 
