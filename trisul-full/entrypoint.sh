@@ -86,6 +86,20 @@ if [ ! -z "$CAPTURE_FILE" ]; then
     fi 
 fi
 
+# check capture file readability 
+if [ ! -z "$CAPTURE_FILE" ]; then
+
+    #  check if pcap input file is readable by trisul user 
+    cp /root/isfilereadable.sh /tmp
+    if ! sudo -u trisul /tmp/isfilereadable.sh $CAPTURE_FILE ; then 
+	echo -en "\e[31m"
+        echo "Cannot READ the pcap file/directory  $CAPTURE_FILE. user=trisul"
+        echo "Ensure the pcap file/directory is readable by user trisul, use chmod +rR $CAPTURE_FILE" 
+        echo -en "\e[0m"
+	exit 2
+    fi 
+fi
+
 
 if [ ! -z "$NO_SURICATA" ]; then
     echo -en "\e[32m"
@@ -348,20 +362,6 @@ if [ ! -z "$START_INTERFACE" ]; then
         /usr/bin/suricata --user trisul -l /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
     fi
 fi 
-
-# check capture file readability 
-if [ ! -z "$CAPTURE_FILE" ]; then
-
-    #  check if pcap input file is readable by trisul user 
-    cp /root/isfilereadable.sh /tmp
-    if ! sudo -u trisul /tmp/isfilereadable.sh $CAPTURE_FILE ; then 
-	echo -en "\e[31m"
-        echo "Cannot READ the pcap file/directory  $CAPTURE_FILE. user=trisul"
-        echo "Ensure the pcap file/directory is readable by user trisul, use chmod +rR $CAPTURE_FILE" 
-        echo -en "\e[0m"
-	exit 2
-    fi 
-fi
 
 
 if [ ! -z "$CAPTURE_FILE" ]; then
