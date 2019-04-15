@@ -94,7 +94,7 @@ if [ ! -z "$CAPTURE_FILE" ]; then
     if ! sudo -u trisul /tmp/isfilereadable.sh $CAPTURE_FILE ; then 
 	echo -en "\e[31m"
         echo "Cannot READ the pcap file/directory  $CAPTURE_FILE. user=trisul"
-        echo "Ensure the pcap file/directory is readable by user trisul, use chmod +rR $CAPTURE_FILE" 
+        echo "Ensure the pcap file/directory is readable by user trisul, use chmod +r -R $CAPTURE_FILE" 
         echo -en "\e[0m"
 	exit 2
     fi 
