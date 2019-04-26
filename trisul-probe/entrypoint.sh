@@ -107,10 +107,10 @@ if [ ! -z "$INSTALL_PROBE" ]; then
 
 	echo  Successfully installed a new probe $PROBE_ID 
 	echo  You can now stop this docker image and start using it as a Trisul-Probe 
-	echo  Sleeping. 
+	echo  Exiting docker, you can now start the probe . 
 	sleep infinity 
 
-	sleep infinity 
+	exit 1
 fi
 
 echo Clean up old pid files - within Docker PIDs repeat  easily 
