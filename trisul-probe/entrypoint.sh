@@ -1,6 +1,7 @@
 #!/bin/bash
 # (c) Trisul Network Analytics 
-# Docker entry point for Trisul-Full
+# Docker entry point for Trisul-Probe 
+# 
 
 
 
