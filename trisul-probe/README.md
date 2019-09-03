@@ -42,9 +42,10 @@ This step installs the certificate-key pair on the probe
 
 ````
 docker run --name=probe1a --net=host \
-      -v /home/unpl/probeEAST11data:/trisulroot \
-	      -d trisulnsm/trisul-probe   \
-		      --install-probe domain0  probeEAST11
+     -v /home/unpl/probeEAST11data:/trisulroot \
+         -d trisulnsm/trisul-probe   \
+              --install-probe domain0  probeEAST11  
+
 
 # to check progress 
 docker logs -f probe1a 
@@ -80,7 +81,7 @@ Use the following commands inside the docker container to confirm
 ````
 
 # login to the container
-docker exec -it /bin/bash probe1a
+docker exec -it probe1a /bin/bash
 
 # check status from the CLI 
 trisulctl_probe 
@@ -152,4 +153,12 @@ Select a Port Range for the Hub Node and then restart the Hub `sudo trisulctl_hu
 
 For more details see Trisul Documentation , [Step 5 and Step 6 in Deploy a new probe](https://www.trisul.org/docs/ug/domain/deploy_probe.html) 
 
+
+### For Developers
+
+To build an image from the docker file. Put the DEBs in the current directory and run 
+
+```
+docker build -t trisul-probe . 
+```
 
