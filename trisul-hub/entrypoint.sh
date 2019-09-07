@@ -69,7 +69,7 @@ fi
 if [ ! -z "$INSTALL_HUB" ]; then
 	echo  Installing hub domain=$DOMAIN_ID,  hub=$HUB_ID 
 	/usr/local/bin/trisulctl_hub stop domain 
-	/usr/local/bin/trisulctl_hub "set state ask_confirm=false;install domain /trisulroot/$DOMAIN_ID.cert "
+	/usr/local/bin/trisulctl_hub "set state ask_confirm=false;install remote-domain /trisulroot/$DOMAIN_ID.cert "
 	/usr/local/bin/trisulctl_hub "set state ask_confirm=false;install hub /trisulroot/$HUB_ID.cert "
 	/usr/local/bin/trisulctl_hub "set state ask_confirm=false;install context  $HUB_ID  $USECONTEXTNAME " 
 	/usr/local/bin/trisulctl_hub "set state ask_confirm=false;uninstall hub domain0 hub0  "

@@ -205,7 +205,7 @@ if [ ! -z "$START_INTERFACE" ]; then
 		echo We wont be running suricata on the interface $NO_SURICATA : user specified --no-ids option 
 	else 
 		echo Starting Suricata  on line  $START_INTERFACE
-		/usr/bin/suricata --user trisul -l /usr/local/var/lib/trisul-probe/domain0/$PROBE_ID/$USECONTEXTDIR/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
+		/usr/bin/suricata -l /usr/local/var/lib/trisul-probe/domain0/$PROBE_ID/$USECONTEXTDIR/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
 	fi
 fi 
 

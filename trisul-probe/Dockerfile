@@ -1,5 +1,5 @@
-# Ubuntu 16.04
-FROM ubuntu:16.04
+# Ubuntu 18.04
+FROM ubuntu:18.04
 
 # Meta
 LABEL 	org.trisul.project="trisul-probe" \
@@ -7,6 +7,8 @@ LABEL 	org.trisul.project="trisul-probe" \
 	project="Trisul Network Analytics Probe Node" \
 	description="Trisul Probe Node single container" \
 	version="6.5" 
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Usual update
 RUN apt-get update  &&  apt-get install -y  \
@@ -28,7 +30,7 @@ RUN apt-get update  &&  apt-get install -y  \
 
 # Packages
 COPY *.deb /root/
-RUN dpkg -i /root/trisul-probe_6.5.*-xenial_amd64.deb    /root/trisul-badfellas_6.5.*-xenial_amd64.deb  /root/trisul-geo_6.5.*-xenial_amd64.deb	   /root/trisul-urlfilter_6.5.*-xenial_amd64.deb  
+RUN dpkg -i /root/trisul-probe_6.5.*-bionic_amd64.deb    /root/trisul-badfellas_6.5.*-bionic_amd64.deb  /root/trisul-geo_6.5.*-bionic_amd64.deb	   /root/trisul-urlfilter_6.5.*-bionic_amd64.deb  
 
 # This layer overlays SURICATA config items 
 COPY    oink.cron \

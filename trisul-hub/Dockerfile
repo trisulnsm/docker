@@ -1,5 +1,5 @@
-# Ubuntu 16.04
-FROM ubuntu:16.04
+# Ubuntu 18.04 - build on LTS 18 
+FROM ubuntu:18.04
 
 # Meta
 LABEL 	org.trisul.project="trisul" \
@@ -26,7 +26,7 @@ RUN apt-get update  &&  apt-get install -y  \
 
 # Packages
 COPY *.deb /root/
-RUN dpkg -i /root/trisul-hub_6.5.*-xenial_amd64.deb      
+RUN dpkg -i /root/trisul-hub_6.5.*-bionic_amd64.deb      
 
 # Layer moves initial var and etc out of the way 
 RUN mv /usr/local/var /usr/local/var_init ; \
