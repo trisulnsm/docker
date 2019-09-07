@@ -79,6 +79,10 @@ else
 	echo ZZ Creating and linking persistent ETC for trisul components 
 	cp -r /usr/local/etc_init  /trisulroot/etc
 	ln -sf /trisulroot/etc /usr/local/etc
+
+        echo ++ Installing default Trisul LUA analytics  
+        tar xf /root/luaplugs.tar.gz -C  /usr/local/lib/trisul-probe/plugins/lua
+
 fi  
 
 echo Mapping share/plugins with Badfellas INTEL for TrisulNSM
