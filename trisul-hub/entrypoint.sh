@@ -11,7 +11,7 @@ USECONTEXTNAME="default"
 USECONTEXTDIR="context0"
 while true; do
   case "$1" in
-        --timezone) 		    TIMEZONE="$2"; shift 2 ;;
+    --timezone) 		    	TIMEZONE="$2"; shift 2 ;;
 	--hub-id )                  HUB_ID="$2";shift 2;; 
 	--install-hub )             INSTALL_HUB="1"; DOMAIN_ID="$2";HUB_ID="$3";shift 3;; 
 	--context-name)             USECONTEXTNAME="$2"; USECONTEXTDIR="context_$USECONTEXTNAME";shift 2;;  

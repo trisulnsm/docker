@@ -4,9 +4,9 @@ FROM ubuntu:18.04
 # Meta
 LABEL 	org.trisul.project="trisul" \
         maintainer="github.com/trisulnsm" \
-	project="Trisul Network Analytics Hub" \
-	description="Trisul Hub contains the backend database and query components" \
-	version="6.5" 
+		project="Trisul Network Analytics Hub" \
+		description="Trisul Hub contains the backend database and query components" \
+		version="6.5" 
 
 
 # Usual update
@@ -18,15 +18,14 @@ RUN apt-get update  &&  apt-get install -y  \
 		lsb-release \
 		anacron \
 		tzdata \
-		ethtool \
 		binutils  \
 		nano  \
 		vim \
-                sudo 
+        sudo 
 
 # Packages
 COPY *.deb /root/
-RUN dpkg -i /root/trisul-hub_6.5.*-bionic_amd64.deb      
+RUN dpkg -i /root/trisul-hub_6.5.*-bionic_amd64.deb  /root/webtrisul_6.5.*-bionic.deb
 
 # Layer moves initial var and etc out of the way 
 RUN mv /usr/local/var /usr/local/var_init ; \

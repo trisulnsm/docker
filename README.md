@@ -7,8 +7,9 @@ A full blown Network Security and Traffic Monitoring (NSM) solution you can depl
 
 | Date | Remarks |
 | ---- | ------- |
-| Feb-21-2019 |  *NEW*  New Geo IP metering.  City and Subnets and support for new Maxmind GeoLite2 and GeoIP databases.  Do buy a subscription from [Maxmind](https://www.maxmind.com/en/home)  for maximum accuracy.|
-| Feb-01-2019 |  *NEW*  Added `--netflow-mode` [option to start](#3-start-a-netflow-analytics-instance)  Netflow v5/v9/v10/IPFIX/SFlow analytics  |
+| Dec-26-2019 |  New packages |
+| Feb-21-2019 |  New Geo IP metering.  City and Subnets and support for new Maxmind GeoLite2 and GeoIP databases.  Do buy a subscription from [Maxmind](https://www.maxmind.com/en/home)  for maximum accuracy.|
+| Feb-01-2019 |  Added `--netflow-mode` [option to start](#3-start-a-netflow-analytics-instance)  Netflow v5/v9/v10/IPFIX/SFlow analytics  |
 | Jan-22-2019 |   Trisul NSM docker images includes Cross-Drill allows you to track information flows |
 | Oct-12-2018 | [trisul-probe](https://github.com/trisulnsm/docker/blob/master/trisul-probe/README.md)  docker image containing only the probe components. Use this to roll out probes, connecting to a Trisul-Hub node.  |
 | Mar-02-2018 |  `--enable-file-extraction` option |
