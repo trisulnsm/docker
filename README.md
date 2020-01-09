@@ -165,6 +165,13 @@ Options
 11. `--no-pcap-store` : Do not store raw packets, use this for analyzing certain types of PCAP dumps
 12. `--init-db` : Use this to create a blank initialized database on the first run.
 
+
+Automatically start on Reboot
+-----------------------------
+
+Add `--restart=always` option  to the `docker run` commandline  
+
+
 Trust Error
 -----
 
