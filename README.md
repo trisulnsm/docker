@@ -7,6 +7,7 @@ A full blown Network Security and Traffic Monitoring (NSM) solution you can depl
 
 | Date | Remarks |
 | ---- | ------- |
+| Jun-19-2019 |  Moved base image to 18.04 |
 | Dec-26-2019 |  New packages |
 | Feb-21-2019 |  New Geo IP metering.  City and Subnets and support for new Maxmind GeoLite2 and GeoIP databases.  Do buy a subscription from [Maxmind](https://www.maxmind.com/en/home)  for maximum accuracy.|
 | Feb-01-2019 |  Added `--netflow-mode` [option to start](#3-start-a-netflow-analytics-instance)  Netflow v5/v9/v10/IPFIX/SFlow analytics  |

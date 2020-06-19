@@ -1,5 +1,5 @@
 #!/bin/bash
-# (c) Trisul Network Analytics 
+# (c) Trisul Network Analytics  2019-20
 # Docker entry point for Trisul-Full
 #
 
@@ -56,7 +56,7 @@ if [ ! -z "$ENABLE_FILE_EXTRACTION" ]; then
 fi
 
 if [ ! -z "$NETFLOW_MODE" ]; then
-    echo -en "\e[32m"
+    echo -en "\e[32m" 
     echo  Option [--netflow-mode]      Netflow mode $NETFLOW_MODE
     echo -en "\e[0m"
 fi
@@ -215,13 +215,13 @@ fi
 
 
 echo Clean up old pid files - within Docker PIDs repeat  easily 
-rm -f /usr/local/var/lib/trisul-probe/domain0/probe0/run/trisul_cp_probe.pid
-rm -f /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run/trisul-probe.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/context0/run/flushd.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/context0/run/trp.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/run/trisul_cp_hub.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/run/trisul_cp_config.pid
-rm -f /usr/local/var/lib/trisul-hub/domain0/run/trisul_cp_router.pid
+#rm -f /usr/local/var/lib/trisul-probe/domain0/probe0/run/trisul_cp_probe.pid
+#rm -f /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run/trisul-probe.pid
+#rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/context0/run/flushd.pid
+#rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/context0/run/trp.pid
+#rm -f /usr/local/var/lib/trisul-hub/domain0/hub0/run/trisul_cp_hub.pid
+#rm -f /usr/local/var/lib/trisul-hub/domain0/config0/run/trisul_cp_config.pid
+#rm -f /usr/local/var/lib/trisul-hub/domain0/router0/run/trisul_cp_router.pid
 
 echo Stopping Hub domain
 /usr/local/bin/trisulctl_hub stop context all   
@@ -360,7 +360,7 @@ if [ ! -z "$START_INTERFACE" ]; then
         echo We wont be running suricata on the interface $NO_SURICATA : user specified --no-ids option 
     else 
         echo Starting Suricata  on line  $START_INTERFACE
-        /usr/bin/suricata --user trisul -l /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
+        /usr/bin/suricata -l /usr/local/var/lib/trisul-probe/domain0/probe0/context0/run -c /etc/suricata/suricata-debian.yaml -i $START_INTERFACE  -D
     fi
 fi 
 

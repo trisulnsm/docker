@@ -1,5 +1,7 @@
-# Ubuntu 16.04
-FROM ubuntu:16.04
+# Ubuntu 18.04
+FROM ubuntu:18.04
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 # Meta
 LABEL 	org.trisul.project="trisul" \
@@ -11,11 +13,13 @@ LABEL 	org.trisul.project="trisul" \
 
 # Usual update
 RUN apt-get update  &&  apt-get install -y  \
+		software-properties-common \
 		apt-utils \
 		iputils-ping \
 		net-tools \
 		libssl1.0.0 \
 		lsb-release \
+		systemd \
 		anacron \
 		tzdata \
 		ethtool \
@@ -27,8 +31,10 @@ RUN apt-get update  &&  apt-get install -y  \
 		libleveldb1v5 \
 		snmp \
 		bsdmainutils \
-		suricata  \
-                sudo 
+		sudo 
+
+
+RUN add-apt-repository ppa:oisf/suricata-stable  && apt update && apt install -y suricata
 
 # Tshark alone in non-interactive
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tshark \
@@ -37,7 +43,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tshark \
 
 # Packages
 COPY *.deb /root/
-RUN dpkg -i /root/trisul-probe_6.5.*-xenial_amd64.deb /root/trisul-hub_6.5.*-xenial_amd64.deb       /root/trisul-badfellas_6.5.*-xenial_amd64.deb  /root/trisul-geo_6.5.*-xenial_amd64.deb	   /root/trisul-urlfilter_6.5.*-xenial_amd64.deb /root/webtrisul_6.5.*-xenial_amd64.deb 
+RUN dpkg -i /root/trisul-probe_6.5.*-bionic_amd64.deb /root/trisul-hub_6.5.*-bionic_amd64.deb       /root/trisul-badfellas_6.5.*-bionic_amd64.deb  /root/trisul-geo_6.5.*-bionic_amd64.deb	   /root/trisul-urlfilter_6.5.*-bionic_amd64.deb /root/webtrisul_6.5.*-bionic_amd64.deb 
 
 # This layer overlays SURICATA config items 
 COPY oink.cron \
@@ -56,7 +62,6 @@ RUN mv /usr/local/var /usr/local/var_init ; \
     mv /usr/local/etc /usr/local/etc_init; \
 	mv /etc/suricata /etc/suricata_init; \
 	mv /usr/local/share/trisul-probe/plugins /usr/local/share/trisul-probe/shareplugins_init; \
-	mv /etc/oinkmaster.conf /etc/oinkmaster.conf_init ; \
 	mv /usr/local/share/webtrisul/public/plugins  /usr/local/share/webtrisul/public/plugins_init; \
 	rm  /etc/localtime 
 
