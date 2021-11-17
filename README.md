@@ -7,15 +7,13 @@ A full blown Network Security and Traffic Monitoring (NSM) solution you can depl
 
 | Date | Remarks |
 | ---- | ------- |
-| Jun-19-2019 |  Moved base image to 18.04 |
+| Nov-17-2021 |  Updated all packages to latest Nov 2021 version |
+| Jan-05-2021 |  Updated all packages to latest Jan 2021 version |
+| Jun-19-2020 |  Moved base image to 18.04 |
 | Dec-26-2019 |  New packages |
 | Feb-21-2019 |  New Geo IP metering.  City and Subnets and support for new Maxmind GeoLite2 and GeoIP databases.  Do buy a subscription from [Maxmind](https://www.maxmind.com/en/home)  for maximum accuracy.|
 | Feb-01-2019 |  Added `--netflow-mode` [option to start](#3-start-a-netflow-analytics-instance)  Netflow v5/v9/v10/IPFIX/SFlow analytics  |
 | Jan-22-2019 |   Trisul NSM docker images includes Cross-Drill allows you to track information flows |
-| Oct-12-2018 | [trisul-probe](https://github.com/trisulnsm/docker/blob/master/trisul-probe/README.md)  docker image containing only the probe components. Use this to roll out probes, connecting to a Trisul-Hub node.  |
-| Mar-02-2018 |  `--enable-file-extraction` option |
-| Feb_22_2018 |   Added tshark and snmp. With tshark "Quick PCAP" view will give you a one line summary per packet, without you having to download the full PCAP. SNMP tools can add interface or any other metrics using the SNMP Lua Script and to resolve Netflow interfaces and router names. |
-
 
 Other links
 -----------
